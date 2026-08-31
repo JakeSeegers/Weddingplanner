@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VowSuite Wedding Planning Studio</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23211d1a'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='22' font-weight='700' fill='%23fff4df'%3EVS%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./floorplan.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-block">
+          <div class="brand-mark">VS</div>
+          <div>
+            <strong>VowSuite</strong>
+            <span>Planning Studio</span>
+          </div>
+        </div>
+        <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-expanded="false" aria-controls="primaryNav"><i data-lucide="menu"></i><span>Menu</span></button>
+        <nav id="primaryNav" class="nav-list" aria-label="Primary">
+          <button class="nav-item active" data-view="overview"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
+          <button class="nav-item" data-view="guests"><i data-lucide="users"></i><span>Guests</span></button>
+          <button class="nav-item" data-view="budget"><i data-lucide="wallet-cards"></i><span>Budget</span></button>
+          <button class="nav-item" data-view="vendors"><i data-lucide="briefcase-business"></i><span>Vendors</span></button>
+          <button class="nav-item" data-view="timeline"><i data-lucide="list-checks"></i><span>Timeline</span></button>
+          <button class="nav-item" data-view="runsheet"><i data-lucide="clock-3"></i><span>Run Sheet</span></button>
+          <button class="nav-item" data-view="daymode"><i data-lucide="smartphone"></i><span>Day Mode</span></button>
+          <button class="nav-item" data-view="seating"><i data-lucide="armchair"></i><span>Seating</span></button>
+          <button class="nav-item" data-view="production"><i data-lucide="sparkles"></i><span>Production</span></button>
+          <button class="nav-item" data-view="reports"><i data-lucide="file-chart-column"></i><span>Reports</span></button>
+          <button class="nav-item" data-view="documents"><i data-lucide="folder-kanban"></i><span>Documents</span></button>
+          <button class="nav-item" data-view="studio"><i data-lucide="building-2"></i><span>Studio</span></button>
+          <button class="nav-item" data-view="portal"><i data-lucide="eye"></i><span>Portal</span></button>
+        </nav>
+        <div class="image-panel">
+          <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=900&q=80" alt="Elegant wedding reception table setting" />
+          <div>
+            <span>Event Readiness</span>
+            <strong id="readinessScore">0%</strong>
+          </div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Professional wedding operations</p>
+            <h1 id="coupleTitle">Wedding Command Center</h1>
+          </div>
+          <div class="topbar-actions">
+            <div class="global-search">
+              <i data-lucide="search"></i>
+              <input id="globalSearch" type="search" placeholder="Search the plan" autocomplete="off" />
+              <div id="globalSearchResults" class="search-results"></div>
+            </div>
+            <label class="date-field">
+              <span>Wedding date</span>
+              <input id="weddingDate" type="date" />
+            </label>
+            <span id="autosaveStatus" class="save-status">Saved</span>
+            <select id="modeSelect" class="mode-select" title="Planner or client view"><option>Planner mode</option><option>Client mode</option></select>
+            <button id="newCoupleBtn" class="ghost-button" title="Start a blank plan"><i data-lucide="sparkles"></i>New couple</button>
+            <details class="actions-menu">
+              <summary class="icon-button" title="More actions"><i data-lucide="more-horizontal"></i></summary>
+              <div class="actions-popover">
+                <button id="undoBtn" class="menu-action" title="Undo last change" disabled><i data-lucide="undo-2"></i><span>Undo</span></button>
+                <button id="aboutBtn" class="menu-action" title="About VowSuite"><i data-lucide="info"></i><span>About</span></button>
+                <button id="exportBtn" class="menu-action" title="Export plan"><i data-lucide="download"></i><span>Export plan</span></button>
+                <label class="menu-action" title="Import plan">
+                  <i data-lucide="upload"></i><span>Import plan</span>
+                  <input id="importInput" type="file" accept="application/json" hidden />
+                </label>
+                <button id="printBtn" class="menu-action" title="Print brief"><i data-lucide="printer"></i><span>Print</span></button>
+              </div>
+            </details>
+          </div>
+        </header>
+
+        <section id="overview" class="view active-view">
+          <div class="hero-grid">
+            <section class="command-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Live plan health</p>
+                  <h2>Executive snapshot</h2>
+                </div>
+                <button id="resetBtn" class="ghost-button"><i data-lucide="refresh-cw"></i>Restore demo</button>
+              </div>
+              <div class="kpi-grid" id="kpiGrid"></div>
+              <div class="insight-grid">
+                <article>
+                  <span class="label">Critical path</span>
+                  <strong id="criticalPath">-</strong>
+                  <p id="criticalCopy"></p>
+                </article>
+                <article>
+                  <span class="label">Budget posture</span>
+                  <strong id="budgetPosture">-</strong>
+                  <p id="budgetCopy"></p>
+                </article>
+                <article>
+                  <span class="label">Guest signal</span>
+                  <strong id="guestSignal">-</strong>
+                  <p id="guestCopy"></p>
+                </article>
+              </div>
+            </section>
+            <section class="brief-panel">
+              <div class="couple-card">
+                <label>Couple</label>
+                <input id="coupleNames" type="text" />
+              </div>
+              <div class="couple-card">
+                <label>Venue</label>
+                <input id="venueName" type="text" />
+              </div>
+              <div class="countdown">
+                <span id="daysUntil">0</span>
+                <p>days until the celebration</p>
+              </div>
+              <div class="mini-metrics">
+                <span><strong id="acceptedMini">0</strong> accepted</span>
+                <span><strong id="openTasksMini">0</strong> open tasks</span>
+              </div>
+              <div class="profile-grid">
+                <label>Planner<input id="plannerName" type="text" /></label>
+                <label>RSVP deadline<input id="rsvpDeadline" type="date" /></label>
+                <label>Ceremony<input id="ceremonyTime" type="time" /></label>
+                <label>Reception<input id="receptionTime" type="time" /></label>
+                <label>Venue contact<input id="venueContact" type="text" /></label>
+                <label>Emergency contact<input id="emergencyContact" type="text" /></label>
+              </div>
+            </section>
+          </div>
+          <div class="two-column">
+            <section class="panel">
+              <div class="section-head"><h2>Smart alerts</h2><span id="riskCount" class="pill">0 alerts</span></div>
+              <div id="riskList" class="risk-list"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Decision log</h2><button class="compact-button" id="addDecisionBtn"><i data-lucide="plus"></i></button></div>
+              <div id="decisionList" class="decision-list"></div>
+            </section>
+          </div>
+          <div class="two-column">
+            <section class="panel">
+              <div class="section-head"><h2>Setup wizard</h2><select id="templateSelect"><option value="">Choose template</option><option>Micro wedding</option><option>Luxury ballroom</option><option>Destination wedding</option><option>Cultural celebration</option><option>Backyard wedding</option></select></div>
+              <form id="setupForm" class="inline-form">
+                <input name="couple" placeholder="Couple names" required />
+                <input name="venue" placeholder="Venue" required />
+                <input name="weddingDate" type="date" required />
+                <input name="budgetTarget" type="number" placeholder="Budget" required />
+                <input name="guestTarget" type="number" placeholder="Guest target" />
+                <input name="style" placeholder="Style / tone" />
+                <button><i data-lucide="wand-sparkles"></i>Apply setup</button>
+              </form>
+              <div id="onboardingChecklist" class="mini-list"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Readiness weights</h2></div>
+              <div id="weightControls" class="weight-grid"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="guests" class="view">
+          <div class="section-head">
+            <div><p class="eyebrow">Invitation intelligence</p><h2>Guest management</h2></div>
+            <div class="toolbar">
+              <input id="guestSearch" type="search" placeholder="Search guests, sides, groups, meals" />
+              <select id="guestStatusFilter"></select>
+              <button id="exportGuestsBtn" class="ghost-button" type="button"><i data-lucide="download"></i>CSV</button>
+              <label class="ghost-button"><i data-lucide="upload"></i>CSV<input id="guestCsvInput" type="file" accept=".csv,text/csv" hidden /></label>
+            </div>
+          </div>
+          <form id="guestForm" class="inline-form">
+            <input name="name" placeholder="Guest name" required />
+            <select name="side" id="guestSideSelect" required></select>
+            <input name="group" placeholder="Household / group" required />
+            <select name="status"><option>Invited</option><option>Accepted</option><option>Declined</option><option>Maybe</option></select>
+            <select name="meal"><option>Chicken</option><option>Fish</option><option>Vegetarian</option><option>Vegan</option><option>Kids</option></select>
+            <input name="partySize" type="number" min="1" value="1" placeholder="Party size" />
+            <input name="plusOne" placeholder="Plus-one" />
+            <button><i data-lucide="user-plus"></i>Add guest</button>
+          </form>
+          <div class="data-layout">
+            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Contact</th><th>Side</th><th>Household</th><th>RSVP</th><th>Meal</th><th>Party</th><th>Plus-one</th><th>Invite</th><th>Reminder</th><th>Tags</th><th>Notes</th><th></th></tr></thead><tbody id="guestRows"></tbody></table></div>
+            <aside class="panel sticky-panel"><h3>Guest analytics</h3><canvas id="guestChart" width="360" height="240"></canvas><div id="mealBreakdown" class="breakdown"></div><h3>Reminder queue</h3><div id="reminderQueue" class="mini-list"></div><h3>Sides</h3><div id="sideBreakdown" class="breakdown"></div><h3>Households</h3><div id="householdBreakdown" class="breakdown"></div></aside>
+          </div>
+        </section>
+
+        <section id="budget" class="view">
+          <div class="section-head">
+            <div><p class="eyebrow">Financial control</p><h2>Budget studio</h2></div>
+            <label class="budget-target">Target <input id="budgetTarget" type="number" step="500" /></label>
+          </div>
+          <form id="expenseForm" class="inline-form">
+            <input name="category" placeholder="Category" required />
+            <input name="item" placeholder="Item" required />
+            <input name="estimated" type="number" placeholder="Estimated" required />
+            <input name="actual" type="number" placeholder="Actual or committed" required />
+            <input name="paid" type="number" placeholder="Paid" />
+            <input name="dueDate" type="date" />
+            <button><i data-lucide="circle-dollar-sign"></i>Add line</button>
+          </form>
+          <div class="data-layout">
+            <div class="table-wrap"><table><thead><tr><th>Category</th><th>Item</th><th>Budget</th><th>Committed</th><th>Paid</th><th>Due</th><th>Status</th><th>Variance</th><th></th></tr></thead><tbody id="expenseRows"></tbody></table></div>
+            <aside class="panel sticky-panel"><h3>Spend by category</h3><canvas id="budgetChart" width="360" height="260"></canvas><div id="budgetSummary" class="breakdown"></div><h3>Loaded cost model</h3><div id="financeModel" class="editable-grid"></div><h3>Category caps</h3><div id="categoryCaps" class="mini-list"></div><h3>Cash-flow timeline</h3><div id="cashFlow" class="mini-list"></div><h3>Payment calendar</h3><div id="paymentCalendar" class="mini-list"></div></aside>
+          </div>
+        </section>
+
+        <section id="vendors" class="view">
+          <div class="section-head"><div><p class="eyebrow">Vendor operating system</p><h2>Vendor pipeline</h2></div></div>
+          <form id="vendorForm" class="inline-form">
+            <input name="name" placeholder="Vendor" required />
+            <input name="category" placeholder="Category" required />
+            <select name="stage"><option>Research</option><option>Shortlisted</option><option>Proposal</option><option>Booked</option><option>Paid</option></select>
+            <input name="owner" placeholder="Owner" required />
+            <input name="nextFollowUp" type="date" />
+            <button><i data-lucide="plus"></i>Add vendor</button>
+          </form>
+          <div class="vendor-layout">
+            <div id="vendorBoard" class="kanban"></div>
+            <aside class="panel sticky-panel"><h3>Vendor detail</h3><div id="vendorDetail" class="detail-panel"></div><h3>Comparison matrix</h3><div id="vendorMatrix" class="mini-list"></div></aside>
+          </div>
+        </section>
+
+        <section id="timeline" class="view">
+          <div class="section-head"><div><p class="eyebrow">Critical path orchestration</p><h2>Timeline and tasks</h2></div><select id="taskFilter"></select></div>
+          <div class="toolbar"><button id="addTaskTemplatesBtn" class="ghost-button"><i data-lucide="copy-plus"></i>Phase templates</button></div>
+          <form id="taskForm" class="inline-form">
+            <input name="title" placeholder="Task" required />
+            <input name="owner" placeholder="Owner" required />
+            <input name="due" type="date" required />
+            <select name="priority"><option>High</option><option>Medium</option><option>Low</option></select>
+            <input name="dependency" placeholder="Dependency" />
+            <select name="stage"><option>Backlog</option><option>This Week</option><option>Waiting</option><option>Done</option></select>
+            <button><i data-lucide="badge-check"></i>Add task</button>
+          </form>
+          <div class="task-layout">
+            <div id="taskList" class="task-list"></div>
+            <aside class="panel sticky-panel"><h3>Task board</h3><div id="taskBoard" class="mini-kanban"></div></aside>
+          </div>
+        </section>
+
+        <section id="runsheet" class="view">
+          <div class="section-head"><div><p class="eyebrow">Wedding day command</p><h2>Run-of-show</h2></div><div class="toolbar"><select id="runVendorFilter"></select><span id="runSheetCount" class="pill">0 moments</span></div></div>
+          <form id="runForm" class="inline-form">
+            <input name="time" type="time" required />
+            <input name="title" placeholder="Moment" required />
+            <input name="location" placeholder="Location" required />
+            <input name="owner" placeholder="Owner" required />
+            <input name="vendor" placeholder="Vendor" />
+            <button><i data-lucide="clock-plus"></i>Add moment</button>
+          </form>
+          <section class="panel">
+            <div class="section-head"><h2>Multi-event itinerary</h2></div>
+            <form id="eventForm" class="inline-form compact-form">
+              <input name="name" placeholder="Event name" required />
+              <input name="date" type="date" required />
+              <input name="start" type="time" required />
+              <input name="location" placeholder="Location" required />
+              <input name="owner" placeholder="Owner" />
+              <button><i data-lucide="calendar-plus"></i>Add event</button>
+            </form>
+            <div id="eventList" class="mini-list"></div>
+          </section>
+          <div class="run-layout">
+            <div id="runSheetList" class="run-list"></div>
+            <aside class="panel sticky-panel">
+              <h3>Operations brief</h3>
+              <div id="opsBrief" class="breakdown"></div>
+              <h3>Conflict detection</h3>
+              <div id="runConflicts" class="mini-list"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="seating" class="view">
+          <div class="section-head"><div><p class="eyebrow">Reception design</p><h2>Seating planner</h2></div><div class="toolbar"><input id="tableCapacityInput" type="number" min="2" value="6" title="New table capacity" /><button id="addTableBtn" class="ghost-button"><i data-lucide="plus"></i>Add table</button></div></div>
+          <div class="seating-layout">
+            <div class="floorplan-wrap">
+              <div id="floorplanToolbar" class="floorplan-toolbar"></div>
+              <div id="tableMap" class="table-map floorplan-canvas"></div>
+            </div>
+            <aside class="panel sticky-panel">
+              <h3>Seat assignment</h3>
+              <select id="seatGuestPicker"></select>
+              <p class="muted">Choose a guest, then select an empty seat. Select an occupied seat to clear it.</p>
+              <div id="unseatedList" class="chips"></div>
+              <h3>Selected table</h3>
+              <div id="floorplanTableInspector" class="mini-list"><p class="muted">Click a table on the floor plan to edit its size, color, runner, or rotation.</p></div>
+              <h3>Seating constraints</h3>
+              <p class="muted">Tip: drag an assigned guest between seats to move or swap them.</p>
+              <form id="seatRuleForm" class="inline-form compact-form"><input name="rule" placeholder="Constraint" required /><select name="type"><option>VIP</option><option>Accessibility</option><option>Keep together</option><option>Keep apart</option></select><button><i data-lucide="plus"></i>Add</button></form>
+              <div id="seatConstraints" class="mini-list"></div>
+              <h3>Rule warnings</h3>
+              <div id="seatRuleWarnings" class="mini-list"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="daymode" class="view">
+          <div class="section-head">
+            <div><p class="eyebrow">On-site command mode</p><h2>Wedding-day mobile brief</h2></div>
+            <div class="toolbar">
+              <button id="exportBinderBtn" class="ghost-button"><i data-lucide="book-open-check"></i>Binder</button>
+              <button id="exportMobileBriefBtn" class="ghost-button"><i data-lucide="smartphone"></i>Mobile brief</button>
+            </div>
+          </div>
+          <nav class="day-jumpbar" aria-label="Wedding-day quick jumps">
+            <button data-day-jump="dayModeTimeline"><i data-lucide="clock"></i><span>Now</span></button>
+            <button data-day-jump="dayModeAlerts"><i data-lucide="triangle-alert"></i><span>Alerts</span></button>
+            <button data-day-jump="dayModeVendors"><i data-lucide="briefcase-business"></i><span>Vendors</span></button>
+            <button data-day-jump="dayModeContacts"><i data-lucide="phone"></i><span>Contacts</span></button>
+            <button data-day-jump="dayModeChecklist"><i data-lucide="badge-check"></i><span>Checks</span></button>
+          </nav>
+          <div class="day-grid">
+            <section class="command-panel day-section"><div class="section-head"><h2>Now and next</h2><span id="dayModeClock" class="pill">Live brief</span></div><div id="dayModeTimeline" class="day-timeline"></div></section>
+            <section class="panel day-section"><h2>Critical alerts</h2><div id="dayModeAlerts" class="mini-list"></div></section>
+            <section class="panel day-section"><h2>Vendor call sheet</h2><div id="dayModeVendors" class="mini-list"></div></section>
+            <section class="panel day-section"><h2>Emergency contacts</h2><div id="dayModeContacts" class="mini-list"></div></section>
+            <section class="panel day-section"><h2>Final checks</h2><div id="dayModeChecklist" class="check-grid"></div></section>
+          </div>
+        </section>
+
+        <section id="production" class="view">
+          <div class="section-head"><div><p class="eyebrow">Ceremony, creative, and load-in</p><h2>Production studio</h2></div></div>
+          <div class="production-grid">
+            <section class="panel">
+              <div class="section-head"><h2>Ceremony planner</h2></div>
+              <form id="ceremonyForm" class="inline-form compact-form"><input name="role" placeholder="Role" required /><input name="name" placeholder="Name or cue" required /><input name="music" placeholder="Music / note" /><button><i data-lucide="plus"></i>Add</button></form>
+              <div id="ceremonyList" class="mini-list"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Music planner</h2></div>
+              <form id="musicForm" class="inline-form compact-form"><input name="moment" placeholder="Moment" required /><input name="song" placeholder="Song" required /><select name="status"><option>Idea</option><option>Approved</option><option>Do not play</option></select><button><i data-lucide="plus"></i>Add</button></form>
+              <div id="musicList" class="mini-list"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Photo shot list</h2></div>
+              <form id="photoForm" class="inline-form compact-form"><input name="shot" placeholder="Shot" required /><input name="people" placeholder="People" required /><select name="priority"><option>Must-have</option><option>Nice-to-have</option><option>Detail</option></select><button><i data-lucide="plus"></i>Add</button></form>
+              <div id="photoList" class="mini-list"></div>
+              <h3>Family groups</h3>
+              <form id="photoGroupForm" class="inline-form compact-form"><input name="group" placeholder="Group name" required /><input name="people" placeholder="People" required /><button><i data-lucide="plus"></i>Add</button></form>
+              <div id="photoGroupList" class="mini-list"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Packing and load-in</h2></div>
+              <form id="packingForm" class="inline-form compact-form"><input name="item" placeholder="Item" required /><input name="owner" placeholder="Owner" required /><select name="status"><option>Pack</option><option>Loaded</option><option>Placed</option></select><button><i data-lucide="plus"></i>Add</button></form>
+              <div id="packingList" class="mini-list"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Floor-plan zones</h2></div>
+              <form id="zoneForm" class="inline-form compact-form"><input name="zone" placeholder="Zone" required /><input name="owner" placeholder="Owner" required /><input name="notes" placeholder="Notes" /><button><i data-lucide="plus"></i>Add</button></form>
+              <div id="zoneList" class="mini-list"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Weather plan</h2></div>
+              <div id="weatherChecklist" class="check-grid"></div>
+            </section>
+            <section class="panel">
+              <div class="section-head"><h2>Accessibility plan</h2></div>
+              <div id="accessibilityChecklist" class="check-grid"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="reports" class="view">
+          <div class="section-head"><div><p class="eyebrow">Packets and executive reporting</p><h2>Reports center</h2></div><button id="exportPacketBtn" class="ghost-button"><i data-lucide="download"></i>Export packet</button></div>
+          <div class="reports-grid">
+            <section class="panel"><h2>Catering report</h2><div id="cateringReport" class="mini-list"></div></section>
+            <section class="panel"><h2>Timeline packets</h2><select id="packetType"><option>Planner packet</option><option>Vendor packet</option><option>Wedding party packet</option><option>Family packet</option><option>Client packet</option></select><div id="packetSections" class="check-grid"></div><div id="packetPreview" class="mini-list"></div></section>
+            <section class="panel"><h2>Vendor timelines</h2><select id="vendorPacketSelect"></select><div id="vendorTimelinePreview" class="mini-list"></div></section>
+            <section class="panel"><h2>One-click export pack</h2><div class="toolbar"><button id="exportFullPackBtn" class="ghost-button"><i data-lucide="package"></i>Export all</button><button id="exportDayBriefBtn" class="ghost-button"><i data-lucide="clipboard-list"></i>Day brief</button><button id="exportHtmlPackBtn" class="ghost-button"><i data-lucide="file-code"></i>HTML packet</button><button id="exportBinderReportBtn" class="ghost-button"><i data-lucide="book-open-check"></i>Binder</button></div><div id="exportPackSummary" class="mini-list"></div></section>
+            <section class="panel"><h2>Calendar view</h2><div id="calendarView" class="mini-list"></div></section>
+            <section class="panel"><h2>Readiness methodology</h2><div id="readinessMethod" class="mini-list"></div></section>
+            <section class="panel"><h2>Snapshots and change log</h2><div class="toolbar"><button id="saveSnapshotBtn" class="ghost-button"><i data-lucide="archive"></i>Snapshot</button><select id="snapshotSelect"></select><button id="restoreSnapshotBtn" class="ghost-button"><i data-lucide="rotate-ccw"></i>Restore</button></div><div id="changeLogList" class="mini-list"></div></section>
+          </div>
+        </section>
+
+        <section id="documents" class="view">
+          <div class="section-head"><div><p class="eyebrow">Single source of truth</p><h2>Documents and deliverables</h2></div><button id="addDocTemplatesBtn" class="ghost-button"><i data-lucide="copy-plus"></i>Template set</button></div>
+          <form id="docForm" class="inline-form">
+            <input name="name" placeholder="Document or deliverable" required />
+            <input name="owner" placeholder="Owner" required />
+            <select name="status"><option>Draft</option><option>Review</option><option>Approved</option><option>Sent</option></select>
+            <button><i data-lucide="file-plus-2"></i>Add document</button>
+          </form>
+          <section class="panel">
+            <div class="section-head"><h2>Attachment index</h2></div>
+            <div class="toolbar">
+              <select id="attachmentArea"><option>Contract</option><option>Invoice</option><option>Floor plan</option><option>Inspiration</option><option>Insurance</option><option>Other</option></select>
+              <label class="ghost-button"><i data-lucide="paperclip"></i>Add files<input id="attachmentInput" type="file" multiple hidden /></label>
+            </div>
+            <div id="attachmentList" class="mini-list"></div>
+          </section>
+          <div id="docGrid" class="doc-grid"></div>
+        </section>
+
+        <section id="studio" class="view">
+          <div class="section-head"><div><p class="eyebrow">Planner business layer</p><h2>Studio management</h2></div><button id="saveCoupleBtn" class="ghost-button"><i data-lucide="save"></i>Save couple</button></div>
+          <div class="production-grid">
+            <section class="panel"><h2>Couples dashboard</h2><div id="coupleDashboard" class="mini-list"></div></section>
+            <section class="panel">
+              <h2>Lead intake</h2>
+              <form id="leadForm" class="inline-form compact-form"><input name="name" placeholder="Lead name" required /><input name="date" type="date" required /><input name="budget" type="number" placeholder="Budget" /><input name="style" placeholder="Style" /><select name="stage"><option>New</option><option>Discovery</option><option>Proposal sent</option><option>Booked</option></select><button><i data-lucide="user-round-plus"></i>Add lead</button></form>
+              <div id="leadList" class="mini-list"></div>
+            </section>
+            <section class="panel">
+              <h2>Proposal builder</h2>
+              <form id="proposalForm" class="inline-form compact-form"><input name="name" placeholder="Package" required /><input name="price" type="number" placeholder="Price" required /><input name="scope" placeholder="Scope" required /><select name="status"><option>Draft</option><option>Sent</option><option>Accepted</option></select><button><i data-lucide="file-signature"></i>Add</button></form>
+              <div id="proposalList" class="mini-list"></div>
+            </section>
+            <section class="panel">
+              <h2>Invoice tracker</h2>
+              <form id="invoiceForm" class="inline-form compact-form"><input name="label" placeholder="Invoice" required /><input name="amount" type="number" placeholder="Amount" required /><input name="due" type="date" required /><select name="status"><option>Draft</option><option>Sent</option><option>Paid</option><option>Overdue</option></select><button><i data-lucide="receipt"></i>Add</button></form>
+              <div id="invoiceList" class="mini-list"></div>
+            </section>
+            <section class="panel"><h2>Message templates</h2><select id="messageTemplateSelect"></select><textarea id="messageTemplateOutput" rows="8"></textarea></section>
+            <section class="panel"><h2>Planning assistant</h2><div class="toolbar"><button id="generateAssistantBtn" class="ghost-button"><i data-lucide="brain"></i>Refresh guidance</button></div><div id="assistantPanel" class="mini-list"></div></section>
+            <section class="panel"><h2>Checklist library</h2><div class="toolbar"><select id="checklistTemplateSelect"><option>Luxury final month</option><option>Destination weekend</option><option>Backyard logistics</option><option>Cultural multi-event</option></select><button id="applyChecklistBtn" class="ghost-button"><i data-lucide="copy-plus"></i>Apply</button></div><div id="checklistLibraryPreview" class="mini-list"></div></section>
+            <section class="panel"><h2>Share readiness</h2><div id="shareReadiness" class="mini-list"></div></section>
+            <section class="panel wide-panel">
+              <h2>Cloud sync</h2>
+              <div class="cloud-sync-grid">
+                <label>Supabase project URL<input id="cloudSyncUrl" type="url" placeholder="https://your-project.supabase.co" autocomplete="off" /></label>
+                <label>Anon public key<input id="cloudSyncAnonKey" type="password" placeholder="eyJ..." autocomplete="off" /></label>
+                <label>Shared sync ID<input id="cloudSyncId" placeholder="chen-martinez-2026" autocomplete="off" /></label>
+              </div>
+              <div class="toolbar sync-toolbar">
+                <button id="cloudSyncSaveBtn" class="ghost-button"><i data-lucide="save"></i>Save settings</button>
+                <button id="cloudSyncGenerateBtn" class="ghost-button"><i data-lucide="sparkles"></i>Generate ID</button>
+                <button id="cloudPushBtn" class="ghost-button"><i data-lucide="cloud-upload"></i>Push</button>
+                <button id="cloudPullBtn" class="ghost-button"><i data-lucide="cloud-download"></i>Pull</button>
+              </div>
+              <label class="sync-toggle"><input id="cloudAutoPush" type="checkbox" /> Auto-push local changes</label>
+              <div id="cloudSyncStatus" class="mini-list"></div>
+            </section>
+            <section class="panel"><h2>Backend launch plan</h2><div id="backendReadiness" class="mini-list"></div></section>
+          </div>
+        </section>
+
+        <section id="portal" class="view">
+          <div class="section-head"><div><p class="eyebrow">Client-facing experience</p><h2>Client portal</h2></div><div class="toolbar"><input id="portalPinInput" type="password" placeholder="Portal PIN" /><button id="portalUnlockBtn" class="ghost-button"><i data-lucide="lock-keyhole"></i>Unlock</button></div></div>
+          <div id="portalLocked" class="panel empty-state">Enter the portal PIN to preview the client-facing packet.</div>
+          <div id="portalContent" class="portal-content">
+            <div class="hero-grid">
+              <section class="command-panel"><div class="section-head"><div><p class="eyebrow">Client packet</p><h2 id="portalTitle">Wedding overview</h2></div><span id="portalVisibility" class="pill">Client view</span></div><div id="portalSummary" class="kpi-grid"></div></section>
+              <section class="brief-panel"><h2>Share settings</h2><div id="portalSettings" class="check-grid"></div><label>Portal PIN<input id="portalPinSetting" type="text" /></label></section>
+            </div>
+            <div class="production-grid">
+              <section class="panel"><h2>Shareable packet</h2><div id="clientPacketPreview" class="mini-list"></div></section>
+              <section class="panel"><h2>Vendor directory</h2><div id="clientVendorDirectory" class="mini-list"></div></section>
+              <section class="panel"><h2>Vendor portal preview</h2><select id="portalVendorSelect"></select><div id="vendorPortalPreview" class="mini-list"></div></section>
+              <section class="panel"><h2>Guest relationship map</h2><div id="relationshipMap" class="mini-list"></div></section>
+              <section class="panel"><h2>Seating warnings</h2><div id="seatingWarnings" class="mini-list"></div></section>
+              <section class="panel"><h2>Floor plan canvas</h2><div id="floorPlanCanvas" class="floor-canvas"></div></section>
+              <section class="panel"><h2>Moodboard</h2><form id="moodForm" class="inline-form compact-form"><input name="label" placeholder="Element" required /><input name="value" placeholder="Color, texture, or note" required /><button><i data-lucide="palette"></i>Add</button></form><div id="moodboardList" class="mood-grid"></div></section>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <dialog id="aboutDialog" class="about-dialog">
+      <div class="dialog-head">
+        <div>
+          <p class="eyebrow">About this studio</p>
+          <h2>VowSuite Wedding Planning Studio</h2>
+        </div>
+        <button id="closeAboutBtn" class="icon-button" title="Close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="about-grid">
+        <article><span>Version</span><strong id="aboutVersion">v1.0.0</strong></article>
+        <article><span>Storage</span><strong>Local browser</strong></article>
+        <article><span>Hosting</span><strong>GitHub Pages</strong></article>
+      </div>
+      <p class="muted">Plans are saved on this device. Export a JSON backup before clearing browser data, restoring demo data, or starting a new couple.</p>
+      <div class="toolbar">
+        <a class="ghost-link" href="https://gab8511.github.io/wedding-planning-studio/" target="_blank" rel="noreferrer">Live app</a>
+        <a class="ghost-link" href="https://github.com/Gab8511/wedding-planning-studio/releases/tag/v1.4.0" target="_blank" rel="noreferrer">Release notes</a>
+        <a class="ghost-link" href="https://github.com/Gab8511/wedding-planning-studio/blob/main/PRIVACY.md" target="_blank" rel="noreferrer">Privacy</a>
+      </div>
+    </dialog>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="./floorplan.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

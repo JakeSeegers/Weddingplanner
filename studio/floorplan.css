@@ -1,0 +1,91 @@
+/* Spatial floor plan module — renders into the existing #tableMap element
+   inside the Seating view. Kept in its own file so the vendored VowSuite
+   styles.css never needs to be touched. */
+
+.floorplan-wrap { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+
+.floorplan-toolbar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 10px;
+}
+.floorplan-toolbar select,
+.floorplan-toolbar input[type="text"] {
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; background: #fff;
+}
+.floorplan-toolbar .fp-sep { width: 1px; height: 20px; background: var(--line); margin: 0 2px; }
+.floorplan-toolbar .fp-zoom { display: flex; align-items: center; gap: 4px; }
+.floorplan-toolbar .fp-zoom span { font-size: 11px; color: var(--muted); width: 34px; text-align: center; }
+
+.table-map.floorplan-canvas {
+  display: block;
+  position: relative;
+  width: 1057px;
+  max-width: 100%;
+  height: 706px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: auto;
+  box-shadow: var(--shadow);
+}
+.fp-surface {
+  position: relative;
+  width: 1057px;
+  height: 706px;
+  transform-origin: top left;
+}
+.fp-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; user-select: none;
+}
+
+.fp-table {
+  position: absolute;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid rgba(0,0,0,.35);
+  box-shadow: 0 1px 3px rgba(0,0,0,.35);
+  color: #fff; font-size: 11px; font-weight: 700; text-align: center; line-height: 1.15;
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+  cursor: grab; user-select: none;
+}
+.fp-table:active { cursor: grabbing; }
+.fp-table.round { border-radius: 50%; }
+.fp-table.square, .fp-table.rect { border-radius: 4px; }
+.fp-table.fp-selected { outline: 3px solid #2f6b64; outline-offset: 2px; }
+.fp-runner { position: absolute; pointer-events: none; border-radius: 2px; }
+.fp-label { position: relative; z-index: 2; pointer-events: none; }
+
+/* Chairs reuse the app's existing .seat button (so click/drag/assignment
+   logic in app.js keeps working) but need a small round spatial look
+   instead of the default big rectangular grid button. */
+.floorplan-canvas .seat {
+  position: absolute;
+  width: 16px; height: 16px; min-height: 0;
+  margin: -8px 0 0 -8px;
+  padding: 0;
+  border-radius: 5px;
+  background: #fff; border: 1.5px solid #756f68;
+  font-size: 0;
+  box-shadow: 0 1px 2px rgba(0,0,0,.25);
+}
+.floorplan-canvas .seat.occupied {
+  background: #ffe9b3; border-color: #b18a45;
+}
+.floorplan-canvas .seat::after {
+  content: "";
+  display: block; width: 5px; height: 5px; margin: 4px auto; border-radius: 50%;
+  background: #a89f94;
+}
+.floorplan-canvas .seat.occupied::after { display: none; }
+
+.fp-swatches { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.fp-swatch {
+  width: 20px; height: 20px; border-radius: 50%; border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--line); cursor: pointer;
+}
+.fp-swatch.fp-active { box-shadow: 0 0 0 2px var(--accent-2); }
+.fp-field { margin-bottom: 10px; }
+.fp-field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+.fp-row { display: flex; gap: 6px; }
+.fp-row > * { flex: 1; }
