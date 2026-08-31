@@ -206,12 +206,12 @@
   };
 
   var TABLE_TYPES = {
-    cocktail24: {label:'24" Cocktail / High Top', shape:'round', w:44, h:44, seats:0, color:PALETTE.teal},
-    cocktail30: {label:'30" Cocktail / High Top', shape:'round', w:54, h:54, seats:0, color:PALETTE.teal},
-    card3x3:    {label:'3\'×3\' Card Table',        shape:'square', w:60, h:60, seats:4, color:PALETTE.dustyrose},
+    cocktail24: {label:'24" Cocktail / High Top', shape:'round', w:12, h:12, seats:0, color:PALETTE.teal},
+    cocktail30: {label:'30" Cocktail / High Top', shape:'round', w:8,  h:8,  seats:0, color:PALETTE.teal},
+    card3x3:    {label:'3\'×3\' Card Table',        shape:'square', w:18, h:18, seats:4, color:PALETTE.dustyrose},
     banquet6:   {label:"6' Banquet",                shape:'rect', w:130, h:46, seats:6, color:PALETTE.terracotta},
     banquet8:   {label:"8' Banquet",                shape:'rect', w:170, h:46, seats:8, color:PALETTE.terracotta},
-    round60:    {label:'60" Round (8-top)',         shape:'round', w:100, h:100, seats:8, color:PALETTE.terracotta}
+    round60:    {label:'60" Round (8-top)',         shape:'round', w:32, h:32, seats:8, color:PALETTE.terracotta}
   };
 
   // Table color swatches — the wedding palette first, plus a few practical extras
@@ -229,35 +229,45 @@
   var saveTimer = null;
 
   // ---------- default / seed layout ----------
+  // Positions/rotations below are the client's own dialed-in layout (exported
+  // from the app), not a guess — table sizes are now the TABLE_TYPES defaults.
   function seedState(){
     var s = { tables: [], stickies: [], guestPool: [], notes: '', nextId: 1, tableSizes: {} };
     function id(){ return 't' + (s.nextId++); }
 
-    function addRound60(num, x, y){
-      s.tables.push(mkTable(id(), 'round60', x, y, 0, num, seatsForCount(8)));
-    }
-    function seatsForCount(n){
-      var arr = [];
-      for (var i=0;i<n;i++) arr.push({name:''});
-      return arr;
+    function addTable(type, x, y, rot, label, seatCountOverride){
+      var def = TABLE_TYPES[type];
+      var n = (seatCountOverride !== undefined) ? seatCountOverride : def.seats;
+      var seats = [];
+      for (var i=0;i<n;i++) seats.push({name:''});
+      s.tables.push(mkTable(id(), type, x, y, rot||0, label||'', seats));
     }
 
-    addRound60('3', 613, 372); addRound60('1', 698, 372);
-    addRound60('4', 423, 400); addRound60('8', 486, 400); addRound60('5', 550, 400);
-    addRound60('11',423, 466); addRound60('9', 486, 466); addRound60('6', 550, 466);
-    addRound60('12',423, 536); addRound60('10',486, 536); addRound60('7', 550, 536);
+    // dinner tables (all 60" rounds, 8-top)
+    addTable('round60', 630, 373, 0, '3');
+    addTable('round60', 696, 373, 0, '1');
+    addTable('round60', 418, 397, 0, '4');
+    addTable('round60', 488, 398, 0, '8');
+    addTable('round60', 557, 397, 0, '5');
+    addTable('round60', 419, 469, 0, '11');
+    addTable('round60', 490, 467, 0, '9');
+    addTable('round60', 179, 462, 0, '6');
+    addTable('round60', 421, 536, 0, '12');
+    addTable('round60', 489, 536, 0, '10');
+    addTable('round60', 559, 537, 0, '7');
 
     // sweetheart table
-    s.tables.push(mkTable(id(), 'cocktail30', 666, 551, 0, 'B&G', seatsForCount(2)));
+    addTable('round60', 657, 562, 0, 'B&G');
 
     // hi-top cocktail circles (standing, no seats)
-    s.tables.push(mkTable(id(), 'cocktail24', 655, 247, 0, '', []));
-    s.tables.push(mkTable(id(), 'cocktail24', 615, 296, 0, '', []));
-    s.tables.push(mkTable(id(), 'cocktail24', 698, 224, 0, '', []));
+    addTable('cocktail24', 598, 297, 8, '');
+    addTable('cocktail24', 652, 261, 0, '');
+    addTable('cocktail24', 699, 220, 0, '');
 
     // extra seating card tables
-    s.tables.push(mkTable(id(), 'card3x3', 634, 120, 0, '', seatsForCount(4)));
-    s.tables.push(mkTable(id(), 'card3x3', 708, 120, 0, '', seatsForCount(4)));
+    addTable('card3x3', 545, 265, 0, '');
+    addTable('card3x3', 642, 125, 0, '');
+    addTable('card3x3', 731, 125, 0, '');
 
     return s;
   }
