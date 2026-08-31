@@ -235,39 +235,45 @@
     var s = { tables: [], stickies: [], guestPool: [], notes: '', nextId: 1, tableSizes: {} };
     function id(){ return 't' + (s.nextId++); }
 
-    function addTable(type, x, y, rot, label, seatCountOverride){
+    function addTable(type, x, y, rot, label, opts){
+      opts = opts || {};
       var def = TABLE_TYPES[type];
-      var n = (seatCountOverride !== undefined) ? seatCountOverride : def.seats;
+      var n = (opts.seats !== undefined) ? opts.seats : def.seats;
       var seats = [];
       for (var i=0;i<n;i++) seats.push({name:''});
-      s.tables.push(mkTable(id(), type, x, y, rot||0, label||'', seats));
+      var t = mkTable(id(), type, x, y, rot||0, label||'', seats);
+      if (opts.color) t.color = opts.color;
+      if (opts.runner) { t.runner = true; t.runnerColor = opts.runnerColor || t.runnerColor; }
+      s.tables.push(t);
     }
 
+    var CHAMPAGNE = PALETTE.champagne, TEAL = PALETTE.teal;
+
     // dinner tables (all 60" rounds, 8-top)
-    addTable('round60', 630, 373, 0, '3');
-    addTable('round60', 696, 373, 0, '1');
-    addTable('round60', 418, 397, 0, '4');
-    addTable('round60', 488, 398, 0, '8');
-    addTable('round60', 557, 397, 0, '5');
-    addTable('round60', 419, 469, 0, '11');
-    addTable('round60', 490, 467, 0, '9');
-    addTable('round60', 179, 462, 0, '6');
-    addTable('round60', 421, 536, 0, '12');
-    addTable('round60', 489, 536, 0, '10');
-    addTable('round60', 559, 537, 0, '7');
+    addTable('round60', 629, 373, 0, '3',  {color: CHAMPAGNE});
+    addTable('round60', 696, 373, 0, '1',  {color: CHAMPAGNE});
+    addTable('round60', 418, 396, 0, '4',  {color: CHAMPAGNE});
+    addTable('round60', 488, 398, 0, '8',  {color: CHAMPAGNE});
+    addTable('round60', 558, 397, 0, '5',  {color: CHAMPAGNE});
+    addTable('round60', 419, 469, 0, '11', {color: CHAMPAGNE});
+    addTable('round60', 490, 467, 0, '9',  {color: CHAMPAGNE});
+    addTable('round60', 560, 467, 0, '6',  {color: CHAMPAGNE});
+    addTable('round60', 421, 536, 0, '12', {color: CHAMPAGNE});
+    addTable('round60', 491, 536, 0, '10', {color: CHAMPAGNE});
+    addTable('round60', 560, 537, 13,'7',  {color: CHAMPAGNE, runner: true, runnerColor: TEAL});
 
     // sweetheart table
-    addTable('round60', 657, 562, 0, 'B&G');
+    addTable('round60', 657, 562, 0, 'TheDuo', {color: CHAMPAGNE, runner: true, runnerColor: TEAL});
 
     // hi-top cocktail circles (standing, no seats)
-    addTable('cocktail24', 598, 297, 8, '');
-    addTable('cocktail24', 652, 261, 0, '');
-    addTable('cocktail24', 699, 220, 0, '');
+    addTable('cocktail24', 598, 297, 8, '', {color: CHAMPAGNE});
+    addTable('cocktail24', 652, 261, 0, '', {color: CHAMPAGNE});
+    addTable('cocktail24', 699, 220, 0, '', {color: CHAMPAGNE});
 
     // extra seating card tables
-    addTable('card3x3', 545, 265, 0, '');
-    addTable('card3x3', 642, 125, 0, '');
-    addTable('card3x3', 731, 125, 0, '');
+    addTable('card3x3', 538, 265, 0, '', {color: CHAMPAGNE});
+    addTable('card3x3', 642, 125, 0, '', {color: CHAMPAGNE});
+    addTable('card3x3', 731, 125, 0, '', {color: CHAMPAGNE});
 
     return s;
   }
