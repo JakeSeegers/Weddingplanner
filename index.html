@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Room Planner</title>
+<style>
+  :root{
+    --bg:#f5f0e8;
+    --panel:#ffffff;
+    --ink:#2b2622;
+    --muted:#8a8078;
+    --line:#e6dccb;
+    --accent:#A65E51;
+    --accent2:#C2934A;
+    --danger:#b0483f;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+  #app{display:flex;height:100vh;overflow:hidden;}
+
+  /* ---------- Toolbar ---------- */
+  #toolbar{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);
+    position:absolute;top:0;left:0;right:340px;z-index:20;
+  }
+  #toolbar h1{font-size:15px;margin:0 12px 0 0;font-weight:700;color:var(--accent);white-space:nowrap;}
+  #toolbar .sep{width:1px;height:22px;background:var(--line);margin:0 4px;}
+  button, select, input[type=text]{
+    font:inherit;font-size:12.5px;
+  }
+  .btn{
+    border:1px solid var(--line);background:#fff;color:var(--ink);
+    padding:6px 10px;border-radius:7px;cursor:pointer;white-space:nowrap;
+  }
+  .btn:hover{border-color:var(--accent2);}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .btn.primary:hover{background:#82563d;}
+  .btn.danger{color:var(--danger);}
+  .btn.small{padding:3px 7px;font-size:11px;}
+  select{border:1px solid var(--line);border-radius:7px;padding:5px 6px;background:#fff;}
+
+  /* ---------- Canvas area ---------- */
+  #canvasWrap{
+    flex:1;overflow:auto;position:relative;padding-top:46px;
+    background:
+      linear-gradient(var(--bg),var(--bg));
+  }
+  #canvasScroll{
+    min-width:100%;min-height:100%;
+    display:flex;align-items:flex-start;justify-content:center;
+    padding:40px;
+  }
+  #room{
+    position:relative;width:1057px;height:706px;
+    background:#fff;box-shadow:0 6px 24px rgba(0,0,0,.12);
+    transform-origin:top left;
+    flex:none;
+  }
+  #room img#bgimg{
+    position:absolute;top:0;left:0;width:100%;height:100%;
+    pointer-events:none;user-select:none;
+  }
+
+  /* ---------- Table ---------- */
+  .table{
+    position:absolute;
+    display:flex;align-items:center;justify-content:center;
+    cursor:grab;
+    box-shadow:0 1px 3px rgba(0,0,0,.35);
+    border:2px solid rgba(0,0,0,.35);
+    color:#fff;
+    font-size:11px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.5);
+    user-select:none;
+  }
+  .table.round{border-radius:50%;}
+  .table.square,.table.rect{border-radius:4px;}
+  .table.selected{outline:3px solid #2f8fd6;outline-offset:2px;}
+  .table:active{cursor:grabbing;}
+  .runner{
+    position:absolute;pointer-events:none;border-radius:2px;
+  }
+  .tlabel{position:relative;z-index:2;pointer-events:none;text-align:center;line-height:1.15;}
+
+  /* ---------- Chair ---------- */
+  .chair{
+    position:absolute;width:16px;height:16px;margin:-8px;
+    background:#fff;border:1.5px solid #6b6259;border-radius:4px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-size:8px;color:#3a352f;
+    box-shadow:0 1px 2px rgba(0,0,0,.25);
+  }
+  .chair.filled{background:#ffe9b3;border-color:#c99a3f;}
+  .chair.selected{outline:2px solid #2f8fd6;}
+  .chair .dot{width:5px;height:5px;border-radius:50%;background:#a89f94;}
+  .chair.filled .dot{display:none;}
+
+  /* ---------- Notes / sticky ---------- */
+  .sticky{
+    position:absolute;width:150px;min-height:90px;background:#E5D5B7;
+    border:1px solid #C2934A;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.2);
+    padding:8px;font-size:11.5px;cursor:grab;
+  }
+  .sticky:active{cursor:grabbing;}
+  .sticky textarea{
+    width:100%;height:70px;border:none;background:transparent;resize:none;
+    font:inherit;outline:none;color:#4A3B2A;
+  }
+  .sticky .stickyHead{display:flex;justify-content:space-between;font-weight:700;color:#A65E51;margin-bottom:2px;}
+
+  /* ---------- Side panel ---------- */
+  #panel{
+    width:340px;flex:none;background:var(--panel);border-left:1px solid var(--line);
+    overflow-y:auto;padding:14px;
+  }
+  #panel h2{font-size:13px;margin:0 0 8px;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;}
+  .field input[type=text], .field textarea, .field select{
+    width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);
+  }
+  .field textarea{resize:vertical;min-height:56px;}
+  .row{display:flex;gap:8px;}
+  .row > *{flex:1;}
+  .swatches{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+  .swatch{width:22px;height:22px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer;}
+  .swatch.active{box-shadow:0 0 0 2px var(--accent);}
+  .seatlist{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto;}
+  .seatrow{display:flex;gap:6px;align-items:center;}
+  .seatrow span{width:18px;font-size:10px;color:var(--muted);}
+  .seatrow input{flex:1;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font-size:12px;}
+  .empty-hint{color:var(--muted);font-size:12.5px;line-height:1.5;}
+  hr.sep2{border:none;border-top:1px solid var(--line);margin:14px 0;}
+  #guestPool{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;max-height:140px;overflow-y:auto;}
+  .chip{
+    background:#f1ece5;border:1px solid var(--line);border-radius:12px;
+    padding:3px 9px;font-size:11.5px;cursor:pointer;
+  }
+  .chip:hover{border-color:var(--accent2);}
+  .stat{font-size:11.5px;color:var(--muted);margin-top:6px;}
+  .zoomctl{display:flex;align-items:center;gap:4px;}
+  .zoomctl span{font-size:11px;width:38px;text-align:center;color:var(--muted);}
+  #saveState{font-size:11px;color:var(--muted);margin-left:auto;padding-right:4px;white-space:nowrap;}
+
+  @media print{
+    #toolbar,#panel{display:none!important;}
+    #canvasWrap{padding:0;overflow:visible;}
+    #canvasScroll{padding:0;}
+    #app{height:auto;}
+    #room{box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="toolbar">
+    <h1>💍 Room Planner</h1>
+    <select id="addTableType"></select>
+    <button class="btn primary" id="addTableBtn">+ Add Table</button>
+    <button class="btn" id="addNoteBtn">+ Sticky Note</button>
+    <div class="sep"></div>
+    <div class="zoomctl">
+      <button class="btn small" id="zoomOut">−</button>
+      <span id="zoomLabel">100%</span>
+      <button class="btn small" id="zoomIn">+</button>
+    </div>
+    <label class="btn small" style="display:flex;align-items:center;gap:5px;">
+      <input type="checkbox" id="bgToggle" checked style="margin:0;"> Show map
+    </label>
+    <div class="sep"></div>
+    <button class="btn" id="exportBtn">Export JSON</button>
+    <button class="btn" id="importBtn">Import JSON</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none;">
+    <button class="btn" id="printBtn">Print</button>
+    <button class="btn danger" id="resetBtn">Reset Layout</button>
+    <span id="saveState">Saved</span>
+  </div>
+
+  <div id="canvasWrap">
+    <div id="canvasScroll">
+      <div id="room">
+        <img id="bgimg" src="maplayout.png" alt="Venue map">
+        <!-- tables, chairs, stickies injected here -->
+      </div>
+    </div>
+  </div>
+
+  <div id="panel"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // Wedding palette: Terracotta, Deep Teal/Eucalyptus, Ochre, Dusty Rose, Champagne
+  var PALETTE = {
+    terracotta: '#A65E51',
+    teal:       '#4A5D5A',
+    ochre:      '#C2934A',
+    dustyrose:  '#C08E83',
+    champagne:  '#E5D5B7'
+  };
+
+  var TABLE_TYPES = {
+    cocktail24: {label:'24" Cocktail / High Top', shape:'round', w:44, h:44, seats:0, color:PALETTE.teal},
+    cocktail30: {label:'30" Cocktail / High Top', shape:'round', w:54, h:54, seats:0, color:PALETTE.teal},
+    card3x3:    {label:'3\'×3\' Card Table',        shape:'square', w:60, h:60, seats:4, color:PALETTE.dustyrose},
+    banquet6:   {label:"6' Banquet",                shape:'rect', w:130, h:46, seats:6, color:PALETTE.terracotta},
+    banquet8:   {label:"8' Banquet",                shape:'rect', w:170, h:46, seats:8, color:PALETTE.terracotta},
+    round60:    {label:'60" Round (8-top)',         shape:'round', w:100, h:100, seats:8, color:PALETTE.terracotta}
+  };
+
+  // Table color swatches — the wedding palette first, plus a few practical extras
+  var COLORS = [PALETTE.terracotta, PALETTE.teal, PALETTE.ochre, PALETTE.dustyrose, PALETTE.champagne,
+                '#8a8078', '#3f3a35', '#5c7a99'];
+  // Runner colors — champagne linen + palette accents, plus white/neutral options
+  var RUNNER_COLORS = [PALETTE.champagne, '#ffffff', PALETTE.dustyrose, PALETTE.terracotta,
+                       PALETTE.ochre, PALETTE.teal, '#eae4da', '#d6c6a3'];
+
+  var STORAGE_KEY = 'weddingRoomPlannerState_v1';
+
+  var state = null;
+  var selectedId = null;
+  var zoom = 1;
+  var saveTimer = null;
+
+  // ---------- default / seed layout ----------
+  function seedState(){
+    var s = { tables: [], stickies: [], guestPool: [], notes: '', nextId: 1 };
+    function id(){ return 't' + (s.nextId++); }
+
+    function addRound60(num, x, y){
+      s.tables.push(mkTable(id(), 'round60', x, y, 0, num, seatsForCount(8)));
+    }
+    function seatsForCount(n){
+      var arr = [];
+      for (var i=0;i<n;i++) arr.push({name:''});
+      return arr;
+    }
+
+    addRound60('3', 613, 372); addRound60('1', 698, 372);
+    addRound60('4', 423, 400); addRound60('8', 486, 400); addRound60('5', 550, 400);
+    addRound60('11',423, 466); addRound60('9', 486, 466); addRound60('6', 550, 466);
+    addRound60('12',423, 536); addRound60('10',486, 536); addRound60('7', 550, 536);
+
+    // sweetheart table
+    s.tables.push(mkTable(id(), 'cocktail30', 666, 551, 0, 'B&G', seatsForCount(2)));
+
+    // hi-top cocktail circles (standing, no seats)
+    s.tables.push(mkTable(id(), 'cocktail24', 655, 247, 0, '', []));
+    s.tables.push(mkTable(id(), 'cocktail24', 615, 296, 0, '', []));
+    s.tables.push(mkTable(id(), 'cocktail24', 698, 224, 0, '', []));
+
+    // extra seating card tables
+    s.tables.push(mkTable(id(), 'card3x3', 634, 120, 0, '', seatsForCount(4)));
+    s.tables.push(mkTable(id(), 'card3x3', 708, 120, 0, '', seatsForCount(4)));
+
+    return s;
+  }
+
+  function mkTable(tid, type, x, y, rot, label, seats){
+    var def = TABLE_TYPES[type];
+    return {
+      id: tid, type: type, x: x, y: y, rot: rot||0,
+      label: label||'', color: def.color, runner: false, runnerColor: '#ffffff',
+      notes: '', seats: seats
+    };
+  }
+
+  // ---------- persistence ----------
+  function save(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      flashSaved();
+    }catch(e){ console.warn('save failed', e); }
+  }
+  function scheduleSave(){
+    clearTimeout(saveTimer);
+    document.getElementById('saveState').textContent = 'Saving…';
+    saveTimer = setTimeout(save, 350);
+  }
+  function flashSaved(){
+    document.getElementById('saveState').textContent =
+      'Saved ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  }
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    }catch(e){ console.warn('load failed', e); }
+    return null;
+  }
+
+  state = load() || seedState();
+
+  // ---------- seat position helper ----------
+  function defaultSeatPositions(table){
+    var def = TABLE_TYPES[table.type];
+    var n = table.seats.length;
+    var pts = [];
+    if (n === 0) return pts;
+    if (def.shape === 'round'){
+      var r = def.w/2 + 16;
+      for (var i=0;i<n;i++){
+        var a = (Math.PI*2 * i / n) - Math.PI/2;
+        pts.push({x: table.x + r*Math.cos(a), y: table.y + r*Math.sin(a)});
+      }
+    } else {
+      // rect/square: distribute along the two long edges (top/bottom), then sides if needed
+      var hw = def.w/2, hh = def.h/2, pad = 14;
+      var perSide = Math.ceil(n/2);
+      var idx = 0;
+      for (var side=0; side<2 && idx<n; side++){
+        var yOff = side===0 ? -(hh+pad) : (hh+pad);
+        var count = Math.min(perSide, n-idx);
+        for (var k=0;k<count;k++){
+          var frac = (k+1)/(count+1);
+          var xOff = -hw + frac*def.w*2*hw/def.w; // placeholder, replaced below
+          xOff = -hw + frac*(2*hw);
+          pts.push(rot({x:xOff,y:yOff}, table.rot, table));
+          idx++;
+        }
+      }
+    }
+    return pts;
+  }
+  function rot(local, deg, table){
+    var rad = deg * Math.PI/180;
+    var cx = Math.cos(rad), sx = Math.sin(rad);
+    return {
+      x: table.x + local.x*cx - local.y*sx,
+      y: table.y + local.x*sx + local.y*cx
+    };
+  }
+
+  function ensureSeatPositions(table, forceAll){
+    var pts = defaultSeatPositions(table);
+    for (var i=0;i<table.seats.length;i++){
+      var seat = table.seats[i];
+      if (forceAll || seat.x === undefined || seat.y === undefined){
+        seat.x = pts[i] ? pts[i].x : table.x;
+        seat.y = pts[i] ? pts[i].y : table.y;
+      }
+    }
+  }
+
+  // recompute seats whose position hasn't been manually dragged (custom flag false)
+  function relayoutTable(table, opts){
+    opts = opts || {};
+    var pts = defaultSeatPositions(table);
+    for (var i=0;i<table.seats.length;i++){
+      var seat = table.seats[i];
+      if (opts.force || !seat.custom){
+        if (pts[i]){ seat.x = pts[i].x; seat.y = pts[i].y; }
+      }
+    }
+  }
+
+  // ---------- rendering ----------
+  var room = document.getElementById('room');
+  var panel = document.getElementById('panel');
+
+  function render(){
+    // clear dynamic nodes
+    Array.prototype.slice.call(room.querySelectorAll('.table,.chair,.sticky')).forEach(function(n){ n.remove(); });
+
+    state.tables.forEach(renderTable);
+    state.stickies.forEach(renderSticky);
+
+    room.style.transform = 'scale(' + zoom + ')';
+    document.getElementById('zoomLabel').textContent = Math.round(zoom*100) + '%';
+    document.getElementById('bgimg').style.display = document.getElementById('bgToggle').checked ? '' : 'none';
+
+    renderPanel();
+  }
+
+  function renderTable(table){
+    var def = TABLE_TYPES[table.type];
+    var el = document.createElement('div');
+    el.className = 'table ' + def.shape + (table.id===selectedId ? ' selected':'');
+    el.style.width = def.w+'px';
+    el.style.height = def.h+'px';
+    el.style.left = table.x+'px';
+    el.style.top = table.y+'px';
+    el.style.marginLeft = (-def.w/2)+'px';
+    el.style.marginTop = (-def.h/2)+'px';
+    el.style.background = table.color;
+    el.style.transform = 'rotate('+table.rot+'deg)';
+    el.dataset.id = table.id;
+
+    if (table.runner){
+      var runner = document.createElement('div');
+      runner.className = 'runner';
+      runner.style.background = table.runnerColor;
+      if (def.shape === 'round'){
+        runner.style.left = '10%'; runner.style.right='10%';
+        runner.style.top = '40%'; runner.style.height = '20%';
+      } else {
+        runner.style.left = '6%'; runner.style.right='6%';
+        runner.style.top = '38%'; runner.style.height = '24%';
+      }
+      el.appendChild(runner);
+    }
+
+    var lbl = document.createElement('div');
+    lbl.className = 'tlabel';
+    lbl.style.transform = 'rotate(' + (-table.rot) + 'deg)';
+    lbl.textContent = table.label || '';
+    el.appendChild(lbl);
+
+    makeDraggable(el, function(dx,dy){
+      table.x += dx; table.y += dy;
+      table.seats.forEach(function(seat){ seat.x += dx; seat.y += dy; });
+      quickMoveDom(table);
+    }, function(){ scheduleSave(); });
+
+    el.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      selectedId = table.id;
+      render();
+    });
+
+    room.appendChild(el);
+
+    // chairs
+    if (!table._seatInit){ ensureSeatPositions(table); table._seatInit = true; }
+    table.seats.forEach(function(seat, idx){ renderChair(table, seat, idx); });
+  }
+
+  function quickMoveDom(table){
+    // lightweight reposition during drag without full re-render (perf + keeps focus)
+    var el = room.querySelector('.table[data-id="'+table.id+'"]');
+    if (el){ el.style.left = table.x+'px'; el.style.top = table.y+'px'; }
+    table.seats.forEach(function(seat){
+      var cel = room.querySelector('.chair[data-tid="'+table.id+'"][data-sid="'+seat._uid+'"]');
+      if (cel){ cel.style.left = seat.x+'px'; cel.style.top = seat.y+'px'; }
+    });
+  }
+
+  var seatUidCounter = 1;
+  function renderChair(table, seat, idx){
+    if (!seat._uid) seat._uid = seatUidCounter++;
+    var el = document.createElement('div');
+    el.className = 'chair' + (seat.name ? ' filled':'') + (selectedId===('seat:'+table.id+':'+idx)?' selected':'');
+    el.style.left = seat.x+'px';
+    el.style.top = seat.y+'px';
+    el.dataset.tid = table.id;
+    el.dataset.sid = seat._uid;
+    el.title = seat.name || 'Empty seat — click to assign';
+    if (!seat.name){
+      var dot = document.createElement('div');
+      dot.className='dot';
+      el.appendChild(dot);
+    } else {
+      el.textContent = initials(seat.name);
+    }
+
+    makeDraggable(el, function(dx,dy){
+      seat.x += dx; seat.y += dy; seat.custom = true;
+      el.style.left = seat.x+'px'; el.style.top = seat.y+'px';
+    }, function(){ scheduleSave(); }, true);
+
+    el.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      var name = window.prompt('Guest name for this seat (table ' + (table.label||table.id) + '):', seat.name||'');
+      if (name !== null){
+        seat.name = name.trim();
+        scheduleSave();
+        render();
+      }
+    });
+
+    room.appendChild(el);
+  }
+
+  function initials(name){
+    return name.split(/\s+/).map(function(p){return p[0];}).slice(0,2).join('').toUpperCase();
+  }
+
+  function renderSticky(note){
+    var el = document.createElement('div');
+    el.className = 'sticky';
+    el.style.left = note.x+'px';
+    el.style.top = note.y+'px';
+    el.innerHTML = '<div class="stickyHead"><span>Note</span><span class="delnote" style="cursor:pointer;">✕</span></div>';
+    var ta = document.createElement('textarea');
+    ta.value = note.text || '';
+    ta.placeholder = 'Type a note…';
+    ta.addEventListener('input', function(){ note.text = ta.value; scheduleSave(); });
+    ta.addEventListener('mousedown', function(ev){ ev.stopPropagation(); });
+    el.appendChild(ta);
+
+    el.querySelector('.delnote').addEventListener('click', function(ev){
+      ev.stopPropagation();
+      state.stickies = state.stickies.filter(function(n){ return n!==note; });
+      scheduleSave(); render();
+    });
+
+    makeDraggable(el, function(dx,dy){
+      note.x += dx; note.y += dy;
+      el.style.left = note.x+'px'; el.style.top = note.y+'px';
+    }, function(){ scheduleSave(); });
+
+    room.appendChild(el);
+  }
+
+  // ---------- drag helper (pointer events, zoom-aware) ----------
+  function makeDraggable(el, onMove, onEnd, isChair){
+    el.addEventListener('pointerdown', function(ev){
+      if (ev.button !== 0) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      el.setPointerCapture(ev.pointerId);
+      var lastX = ev.clientX, lastY = ev.clientY;
+      var moved = false;
+      function onPointerMove(e){
+        var dx = (e.clientX - lastX) / zoom;
+        var dy = (e.clientY - lastY) / zoom;
+        if (Math.abs(dx) > 0.3 || Math.abs(dy) > 0.3) moved = true;
+        lastX = e.clientX; lastY = e.clientY;
+        onMove(dx, dy);
+      }
+      function onPointerUp(e){
+        el.removeEventListener('pointermove', onPointerMove);
+        el.removeEventListener('pointerup', onPointerUp);
+        if (moved){ el._suppressClick = true; onEnd(); }
+      }
+      el.addEventListener('pointermove', onPointerMove);
+      el.addEventListener('pointerup', onPointerUp);
+    });
+    el.addEventListener('click', function(ev){
+      if (el._suppressClick){ el._suppressClick = false; ev.stopImmediatePropagation(); }
+    }, true);
+  }
+
+  // click empty room = deselect
+  room.addEventListener('click', function(){ selectedId = null; render(); });
+
+  // ---------- panel ----------
+  function renderPanel(){
+    panel.innerHTML = '';
+    var table = state.tables.find(function(t){ return t.id===selectedId; });
+
+    if (table){
+      renderTablePanel(table);
+    } else {
+      renderGlobalPanel();
+    }
+  }
+
+  function renderTablePanel(table){
+    var def = TABLE_TYPES[table.type];
+    var html = '';
+    html += '<h2>Table Settings</h2>';
+    html += '<div class="field"><label>Label</label><input type="text" id="f-label" value="'+escapeAttr(table.label)+'"></div>';
+    html += '<div class="field"><label>Table Type</label><select id="f-type">';
+    Object.keys(TABLE_TYPES).forEach(function(k){
+      html += '<option value="'+k+'"'+(k===table.type?' selected':'')+'>'+TABLE_TYPES[k].label+'</option>';
+    });
+    html += '</select></div>';
+
+    html += '<div class="row">';
+    html += '<div class="field"><label>Rotation</label><input type="range" id="f-rot" min="0" max="359" value="'+table.rot+'"></div>';
+    html += '<div class="field"><label>Seats</label><input type="text" id="f-seatcount" value="'+table.seats.length+'" style="width:60px;"></div>';
+    html += '</div>';
+
+    html += '<div class="field"><label>Table Color</label><div class="swatches" id="f-color"></div></div>';
+    html += '<div class="field"><label><input type="checkbox" id="f-runner-on" '+(table.runner?'checked':'')+' style="margin-right:6px;">Horizontal Runner</label>';
+    html += '<div class="swatches" id="f-runnercolor" style="'+(table.runner?'':'opacity:.35;pointer-events:none;')+'"></div></div>';
+
+    html += '<div class="field"><label>Guests</label><div class="seatlist" id="f-seats"></div></div>';
+
+    html += '<div class="field"><label>Table Notes</label><textarea id="f-notes" placeholder="e.g. gluten-free x2, near speaker...">'+escapeHtml(table.notes)+'</textarea></div>';
+
+    html += '<div class="row"><button class="btn" id="f-duplicate">Duplicate</button><button class="btn danger" id="f-delete">Delete Table</button></div>';
+
+    panel.innerHTML = html;
+
+    document.getElementById('f-label').addEventListener('input', function(e){
+      table.label = e.target.value; scheduleSave();
+      var el = room.querySelector('.table[data-id="'+table.id+'"] .tlabel');
+      if (el) el.textContent = table.label;
+    });
+
+    document.getElementById('f-type').addEventListener('change', function(e){
+      table.type = e.target.value;
+      table.color = TABLE_TYPES[table.type].color;
+      var wantSeats = TABLE_TYPES[table.type].seats;
+      resizeSeats(table, wantSeats);
+      relayoutTable(table, {force:true});
+      scheduleSave(); render();
+    });
+
+    document.getElementById('f-rot').addEventListener('input', function(e){
+      table.rot = parseInt(e.target.value,10);
+      relayoutTable(table);
+      scheduleSave(); render();
+    });
+
+    document.getElementById('f-seatcount').addEventListener('change', function(e){
+      var n = Math.max(0, Math.min(20, parseInt(e.target.value,10)||0));
+      resizeSeats(table, n);
+      relayoutTable(table, {force:true});
+      scheduleSave(); render();
+    });
+
+    var colorWrap = document.getElementById('f-color');
+    COLORS.forEach(function(c){
+      var sw = document.createElement('div');
+      sw.className = 'swatch' + (table.color===c?' active':'');
+      sw.style.background = c;
+      sw.addEventListener('click', function(){ table.color=c; scheduleSave(); render(); });
+      colorWrap.appendChild(sw);
+    });
+
+    document.getElementById('f-runner-on').addEventListener('change', function(e){
+      table.runner = e.target.checked; scheduleSave(); render();
+    });
+    var runnerWrap = document.getElementById('f-runnercolor');
+    RUNNER_COLORS.forEach(function(c){
+      var sw = document.createElement('div');
+      sw.className = 'swatch' + (table.runnerColor===c?' active':'');
+      sw.style.background = c;
+      sw.addEventListener('click', function(){ table.runnerColor=c; scheduleSave(); render(); });
+      runnerWrap.appendChild(sw);
+    });
+
+    var seatWrap = document.getElementById('f-seats');
+    table.seats.forEach(function(seat, i){
+      var row = document.createElement('div');
+      row.className = 'seatrow';
+      row.innerHTML = '<span>'+(i+1)+'</span>';
+      var inp = document.createElement('input');
+      inp.type = 'text'; inp.placeholder='Guest name'; inp.value = seat.name||'';
+      inp.addEventListener('input', function(){ seat.name = inp.value; scheduleSave(); updateChairDom(table,seat); });
+      row.appendChild(inp);
+      seatWrap.appendChild(row);
+    });
+
+    document.getElementById('f-notes').addEventListener('input', function(e){
+      table.notes = e.target.value; scheduleSave();
+    });
+
+    document.getElementById('f-duplicate').addEventListener('click', function(){
+      var copy = JSON.parse(JSON.stringify(table));
+      copy.id = 't' + (state.nextId++);
+      copy.x += 24; copy.y += 24;
+      copy.seats.forEach(function(s){ s.x += 24; s.y += 24; delete s._uid; });
+      delete copy._seatInit;
+      state.tables.push(copy);
+      selectedId = copy.id;
+      scheduleSave(); render();
+    });
+
+    document.getElementById('f-delete').addEventListener('click', function(){
+      if (!window.confirm('Delete this table and its seating?')) return;
+      state.tables = state.tables.filter(function(t){ return t!==table; });
+      selectedId = null;
+      scheduleSave(); render();
+    });
+  }
+
+  function updateChairDom(table, seat){
+    var el = room.querySelector('.chair[data-tid="'+table.id+'"][data-sid="'+seat._uid+'"]');
+    if (!el) return;
+    el.classList.toggle('filled', !!seat.name);
+    el.title = seat.name || 'Empty seat — click to assign';
+    el.textContent = '';
+    if (seat.name){ el.textContent = initials(seat.name); }
+    else { var d=document.createElement('div'); d.className='dot'; el.appendChild(d); }
+  }
+
+  function resizeSeats(table, n){
+    while (table.seats.length < n) table.seats.push({name:''});
+    while (table.seats.length > n) table.seats.pop();
+  }
+
+  function renderGlobalPanel(){
+    var allGuests = [];
+    state.tables.forEach(function(t){
+      t.seats.forEach(function(s){ if (s.name) allGuests.push({name:s.name, table:t.label||t.id}); });
+    });
+    var totalSeats = state.tables.reduce(function(a,t){return a+t.seats.length;},0);
+
+    var html = '';
+    html += '<h2>Venue Notes</h2>';
+    html += '<div class="field"><textarea id="f-globalnotes" placeholder="General planning notes, vendor reminders, timeline...">'+escapeHtml(state.notes||'')+'</textarea></div>';
+
+    html += '<hr class="sep2">';
+    html += '<h2>Guest List</h2>';
+    html += '<div class="field"><label>Add names (one per line) to your unassigned pool</label><textarea id="f-pooladd" placeholder="Jane Smith\nJohn Smith"></textarea></div>';
+    html += '<button class="btn" id="f-pooladdbtn">Add to Pool</button>';
+    html += '<div class="field" style="margin-top:10px;"><label>Unassigned Pool — click a name, then click an empty chair</label><div id="guestPool"></div></div>';
+
+    html += '<div class="stat">Seated: '+allGuests.length+' / '+totalSeats+' seats &middot; Unassigned: '+state.guestPool.length+'</div>';
+
+    html += '<hr class="sep2">';
+    html += '<h2>Seated Guests</h2>';
+    if (allGuests.length){
+      html += '<div class="seatlist" style="max-height:260px;">';
+      allGuests.forEach(function(g){
+        html += '<div class="seatrow"><span></span><input type="text" value="'+escapeAttr(g.name+'  —  Table '+g.table)+'" readonly></div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="empty-hint">No guests seated yet. Click any table\'s chairs to assign names, or use the guest pool above.</div>';
+    }
+
+    panel.innerHTML = html;
+
+    document.getElementById('f-globalnotes').addEventListener('input', function(e){
+      state.notes = e.target.value; scheduleSave();
+    });
+
+    document.getElementById('f-pooladdbtn').addEventListener('click', function(){
+      var ta = document.getElementById('f-pooladd');
+      var names = ta.value.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+      state.guestPool = state.guestPool.concat(names);
+      ta.value = '';
+      scheduleSave(); render();
+    });
+
+    var poolWrap = document.getElementById('guestPool');
+    state.guestPool.forEach(function(name, i){
+      var chip = document.createElement('div');
+      chip.className = 'chip' + (activePoolChip===i ? '' : '');
+      chip.textContent = name;
+      chip.style.outline = (activePoolChip===i) ? '2px solid #2f8fd6' : '';
+      chip.addEventListener('click', function(){
+        activePoolChip = (activePoolChip===i) ? null : i;
+        renderPanel();
+      });
+      poolWrap.appendChild(chip);
+    });
+  }
+
+  var activePoolChip = null;
+
+  // allow clicking an empty chair to consume the active pool chip
+  room.addEventListener('click', function(ev){
+    if (activePoolChip===null) return;
+    var chairEl = ev.target.closest ? ev.target.closest('.chair') : null;
+    if (!chairEl) return;
+    var tid = chairEl.dataset.tid, sid = chairEl.dataset.sid;
+    var table = state.tables.find(function(t){return t.id===tid;});
+    if (!table) return;
+    var seat = table.seats.find(function(s){return String(s._uid)===String(sid);});
+    if (!seat || seat.name) return;
+    ev.stopPropagation();
+    seat.name = state.guestPool[activePoolChip];
+    state.guestPool.splice(activePoolChip,1);
+    activePoolChip = null;
+    scheduleSave(); render();
+  }, true);
+
+  function escapeHtml(s){ return (s||'').replace(/[&<>]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+  function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+
+  // ---------- toolbar wiring ----------
+  var addSel = document.getElementById('addTableType');
+  Object.keys(TABLE_TYPES).forEach(function(k){
+    var o = document.createElement('option');
+    o.value = k; o.textContent = TABLE_TYPES[k].label;
+    addSel.appendChild(o);
+  });
+
+  document.getElementById('addTableBtn').addEventListener('click', function(){
+    var type = addSel.value;
+    var def = TABLE_TYPES[type];
+    var seats = [];
+    for (var i=0;i<def.seats;i++) seats.push({name:''});
+    var t = mkTable('t'+(state.nextId++), type, 530, 350, 0, '', seats);
+    state.tables.push(t);
+    selectedId = t.id;
+    scheduleSave(); render();
+  });
+
+  document.getElementById('addNoteBtn').addEventListener('click', function(){
+    state.stickies.push({x: 500, y: 320, text:''});
+    scheduleSave(); render();
+  });
+
+  document.getElementById('zoomIn').addEventListener('click', function(){ zoom = Math.min(2, zoom+0.1); render(); });
+  document.getElementById('zoomOut').addEventListener('click', function(){ zoom = Math.max(0.3, zoom-0.1); render(); });
+  document.getElementById('bgToggle').addEventListener('change', render);
+
+  document.getElementById('exportBtn').addEventListener('click', function(){
+    var blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'wedding-room-plan.json';
+    a.click();
+  });
+
+  document.getElementById('importBtn').addEventListener('click', function(){
+    document.getElementById('importFile').click();
+  });
+  document.getElementById('importFile').addEventListener('change', function(e){
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      try{
+        var parsed = JSON.parse(reader.result);
+        state = parsed;
+        selectedId = null;
+        scheduleSave(); render();
+      }catch(err){ alert('Could not read that file: ' + err.message); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    if (!window.confirm('Reset to the original venue layout? This clears your current plan.')) return;
+    state = seedState();
+    selectedId = null;
+    scheduleSave(); render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
