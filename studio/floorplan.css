@@ -2,6 +2,14 @@
    inside the Seating view. Kept in its own file so the vendored VowSuite
    styles.css never needs to be touched. */
 
+/* Link back to the simple standalone room planner (repo root), styled like
+   the other sidebar nav items but set apart since it leaves this app. */
+.nav-external {
+  margin-top: 10px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.12);
+  text-decoration: none; opacity: .85;
+}
+.nav-external:hover { opacity: 1; }
+
 .floorplan-wrap { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 
 .floorplan-toolbar {
