@@ -35,6 +35,7 @@
   .btn{
     border:1px solid var(--line);background:#fff;color:var(--ink);
     padding:6px 10px;border-radius:7px;cursor:pointer;white-space:nowrap;
+    text-decoration:none;display:inline-block;
   }
   .btn:hover{border-color:var(--accent2);}
   .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
@@ -159,6 +160,8 @@
 <div id="app">
   <div id="toolbar">
     <h1>💍 Room Planner</h1>
+    <a class="btn" href="./studio/" title="Guests, budget, vendors, timeline, and more">Open Full Studio →</a>
+    <div class="sep"></div>
     <select id="addTableType"></select>
     <button class="btn primary" id="addTableBtn">+ Add Table</button>
     <button class="btn" id="addNoteBtn">+ Sticky Note</button>
