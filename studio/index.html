@@ -173,8 +173,9 @@
             <div class="toolbar">
               <input id="guestSearch" type="search" placeholder="Search guests, sides, groups, meals" />
               <select id="guestStatusFilter"></select>
-              <button id="exportGuestsBtn" class="ghost-button" type="button"><i data-lucide="download"></i>CSV</button>
-              <label class="ghost-button"><i data-lucide="upload"></i>CSV<input id="guestCsvInput" type="file" accept=".csv,text/csv" hidden /></label>
+              <button id="loadPresetGuestsBtn" class="ghost-button" type="button" title="Loads the 155 people from your RSVP export directly - no file needed"><i data-lucide="users"></i>Load RSVP guest list</button>
+              <button id="exportGuestsBtn" class="ghost-button" type="button"><i data-lucide="download"></i>Export CSV</button>
+              <label class="ghost-button"><i data-lucide="upload"></i>Import CSV<input id="guestCsvInput" type="file" accept=".csv,text/csv" hidden /></label>
             </div>
           </div>
           <form id="guestForm" class="inline-form">
@@ -281,7 +282,7 @@
         </section>
 
         <section id="seating" class="view">
-          <div class="section-head"><div><p class="eyebrow">Reception design</p><h2>Seating planner</h2></div><div class="toolbar"><input id="tableCapacityInput" type="number" min="2" value="6" title="New table capacity" /><button id="addTableBtn" class="ghost-button"><i data-lucide="plus"></i>Add table</button></div></div>
+          <div class="section-head"><div><p class="eyebrow">Reception design</p><h2>Seating planner</h2></div><div class="toolbar"><input id="tableCapacityInput" type="number" min="2" value="6" title="New table capacity" /><button id="addTableBtn" class="ghost-button"><i data-lucide="plus"></i>Add table</button><button id="loadPresetSeatingBtn" class="ghost-button" type="button" title="Seats each person from your seating spreadsheet at their assigned table"><i data-lucide="armchair"></i>Apply saved seating</button></div></div>
           <div class="seating-layout">
             <div class="floorplan-wrap">
               <div id="floorplanToolbar" class="floorplan-toolbar"></div>
@@ -491,6 +492,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.113.0/dist/umd/supabase.js"></script>
     <script src="./floorplan.js"></script>
     <script src="./app.js"></script>
+    <script src="./guestdata.js"></script>
+    <script src="./dataloader.js"></script>
     <script src="./realtime.js"></script>
   </body>
 </html>

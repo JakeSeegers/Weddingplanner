@@ -67,10 +67,40 @@
     setCloudStatus("Updated just now from a shared change.", "ok");
   }
 
+  // One-time catch-up fetch on load (postgres_changes only streams changes
+  // going forward from the moment we subscribe, so without this a device
+  // that was closed while a change happened would never see it until the
+  // next unrelated update arrives). This used to call the existing
+  // pullCloudPlan(), which overwrites `plan` unconditionally - but that
+  // fetch takes a moment over the network, and if you started editing
+  // (e.g. importing a CSV) before it resolved, it would silently stomp
+  // your edit back to whatever was already in the cloud, with no error.
+  // Guard: only apply it if nothing local changed while we were waiting.
   async function syncOnStartup() {
     var settings = loadCloudSyncSettings();
     if (!isCloudSyncReady(settings)) return;
-    await pullCloudPlan(); // one-time catch-up fetch; postgres_changes only streams changes going forward
+    var before = JSON.stringify(plan);
+    try {
+      var response = await fetch(
+        cloudRowsUrl(settings, "id=eq." + encodeURIComponent(settings.syncId) + "&select=id,data,updated_at&limit=1"),
+        { headers: cloudHeaders(settings) }
+      );
+      if (response.ok) {
+        var cloudRows = await response.json();
+        if (cloudRows.length) {
+          if (JSON.stringify(plan) === before) {
+            plan = migratePlan(cloudRows[0].data || {});
+            lastAppliedUpdatedAt = cloudRows[0].updated_at;
+            recordChange("Synced the latest shared plan on load");
+            render();
+          } else {
+            setCloudStatus("You made changes before the initial sync finished, so it was skipped to avoid overwriting them. Click Pull if you want the cloud copy instead.", "warn");
+          }
+        }
+      }
+    } catch (e) {
+      // offline or unreachable - local data is still usable, live sync will retry via start()
+    }
     start();
   }
 
