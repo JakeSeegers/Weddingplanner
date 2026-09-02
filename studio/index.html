@@ -8,8 +8,44 @@
     <link rel="preconnect" href="https://images.unsplash.com" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./floorplan.css" />
+    <link rel="stylesheet" href="./access.css" />
   </head>
   <body>
+    <!-- Default view for anyone who opens this link with no access code: a
+         simple guest-facing schedule. Nothing here is a real access
+         boundary - see access.js for why. -->
+    <div id="guestView">
+      <div class="guest-card">
+        <p class="guest-eyebrow">You're invited to celebrate</p>
+        <h1 class="guest-title">Alex &amp; Jake</h1>
+        <p class="guest-date" id="guestDateLine">Saturday, October 4, 2026 · Summerhouse</p>
+        <div class="guest-schedule">
+          <div class="guest-row"><span class="guest-time">11:30 AM – 11:00 PM</span><span class="guest-event">Venue Access</span><span class="guest-loc">Summerhouse</span></div>
+          <div class="guest-row"><span class="guest-time">4:30 PM – 5:00 PM</span><span class="guest-event">Ceremony</span><span class="guest-loc">SH Pergola</span></div>
+          <div class="guest-row"><span class="guest-time">5:00 PM – 6:00 PM</span><span class="guest-event">Cocktail Hour</span><span class="guest-loc">Summerhouse</span></div>
+          <div class="guest-row"><span class="guest-time">5:00 PM – 10:00 PM</span><span class="guest-event">Bar</span><span class="guest-loc">SH Bar</span></div>
+          <div class="guest-row"><span class="guest-time">6:15 PM – 7:15 PM</span><span class="guest-event">Meal Service</span><span class="guest-loc">Summerhouse</span></div>
+          <div class="guest-row"><span class="guest-time">7:15 PM – 8:15 PM</span><span class="guest-event">Dessert</span><span class="guest-loc">Summerhouse</span></div>
+          <div class="guest-row"><span class="guest-time">9:00 PM – 10:00 PM</span><span class="guest-event">Late Night Snack</span><span class="guest-loc">Summerhouse</span></div>
+        </div>
+        <p class="guest-footnote">We can't wait to see you there!</p>
+        <button id="openAccessGateBtn" class="guest-team-link" type="button">Wedding planning team? Enter access code</button>
+      </div>
+    </div>
+
+    <!-- PIN entry, hidden until "planning team" link above is clicked -->
+    <div id="accessGate" class="access-gate" hidden>
+      <form id="accessGateForm" class="access-gate-card">
+        <h2>Enter access code</h2>
+        <input id="accessGateInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="••••" />
+        <p id="accessGateError" class="access-gate-error" hidden>That code didn't match either mode. Try again.</p>
+        <div class="access-gate-actions">
+          <button type="submit" class="ghost-button">Unlock</button>
+          <button type="button" id="closeAccessGateBtn" class="ghost-button">Cancel</button>
+        </div>
+      </form>
+    </div>
+
     <div class="app-shell">
       <aside class="sidebar">
         <div class="brand-block">
@@ -54,7 +90,7 @@
           <div class="topbar-actions">
             <div class="global-search">
               <i data-lucide="search"></i>
-              <input id="globalSearch" type="search" placeholder="Search the plan" autocomplete="off" />
+              <input id="globalSearch" type="search" placeholder="Search the plan" autocomplete="off" class="access-safe" />
               <div id="globalSearchResults" class="search-results"></div>
             </div>
             <label class="date-field">
@@ -62,7 +98,9 @@
               <input id="weddingDate" type="date" />
             </label>
             <span id="autosaveStatus" class="save-status">Saved</span>
-            <select id="modeSelect" class="mode-select" title="Planner or client view"><option>Planner mode</option><option>Client mode</option></select>
+            <span id="accessLevelBadge" class="access-badge" title="How this device is currently accessing the plan"></span>
+            <button id="lockAppBtn" class="ghost-button access-safe" type="button" title="Return to the guest schedule view"><i data-lucide="lock"></i>Lock</button>
+            <select id="modeSelect" class="mode-select access-safe" title="Planner or client view"><option>Planner mode</option><option>Client mode</option></select>
             <button id="newCoupleBtn" class="ghost-button" title="Start a blank plan"><i data-lucide="sparkles"></i>New couple</button>
             <details class="actions-menu">
               <summary class="icon-button" title="More actions"><i data-lucide="more-horizontal"></i></summary>
@@ -171,8 +209,8 @@
           <div class="section-head">
             <div><p class="eyebrow">Invitation intelligence</p><h2>Guest management</h2></div>
             <div class="toolbar">
-              <input id="guestSearch" type="search" placeholder="Search guests, sides, groups, meals" />
-              <select id="guestStatusFilter"></select>
+              <input id="guestSearch" type="search" placeholder="Search guests, sides, groups, meals" class="access-safe" />
+              <select id="guestStatusFilter" class="access-safe"></select>
               <button id="loadPresetGuestsBtn" class="ghost-button" type="button" title="Loads the 155 people from your RSVP export directly - no file needed"><i data-lucide="users"></i>Load RSVP guest list</button>
               <button id="exportGuestsBtn" class="ghost-button" type="button"><i data-lucide="download"></i>Export CSV</button>
               <label class="ghost-button"><i data-lucide="upload"></i>Import CSV<input id="guestCsvInput" type="file" accept=".csv,text/csv" hidden /></label>
@@ -495,5 +533,6 @@
     <script src="./guestdata.js"></script>
     <script src="./dataloader.js"></script>
     <script src="./realtime.js"></script>
+    <script src="./access.js"></script>
   </body>
 </html>
