@@ -45,6 +45,9 @@ let savedCouples = loadSavedCouples();
 let cloudSyncTimer = null;
 let cloudSyncBusy = false;
 let cloudStatus = { state: "idle", message: "Local storage is active. Add cloud settings when you want shared access." };
+// Per-tab id tagged on every cloud push so realtime.js can tell this tab's
+// own writes apart from a change that came from another device.
+let syncClientId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : ("c" + Math.random().toString(36).slice(2));
 
 function createBlankPlan() {
   const nextYear = today.getFullYear() + 1;
@@ -335,7 +338,7 @@ async function pushCloudPlan(options = {}) {
     const response = await fetch(cloudRowsUrl(settings), {
       method: "POST",
       headers: { ...cloudHeaders(settings), Prefer: "resolution=merge-duplicates,return=representation" },
-      body: JSON.stringify({ id: settings.syncId, data: plan, updated_at: new Date().toISOString() })
+      body: JSON.stringify({ id: settings.syncId, data: plan, client_id: syncClientId, updated_at: new Date().toISOString() })
     });
     if (!response.ok) throw new Error(await response.text() || `Cloud push failed (${response.status})`);
     setCloudStatus("Cloud copy updated.", "ok");
