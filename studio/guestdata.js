@@ -2515,35 +2515,35 @@ window.PRESET_SEATING = [
     "guest": "Nancy Potter"
   },
   {
-    "table": "2",
+    "table": "12",
     "guest": "Arcadia Lee"
   },
   {
-    "table": "2",
+    "table": "12",
     "guest": "Aurora Gonzalez"
   },
   {
-    "table": "2",
+    "table": "12",
     "guest": "Darryl Zuckerman"
   },
   {
-    "table": "2",
+    "table": "12",
     "guest": "David Ristedt"
   },
   {
-    "table": "2",
+    "table": "12",
     "guest": "Hannah Zuckerman"
   },
   {
-    "table": "2",
+    "table": "12",
     "guest": "Kelly Ristedt"
   },
   {
-    "table": "2",
+    "table": "12",
     "guest": "Sam Zuckerman"
   },
   {
-    "table": "2",
+    "table": "12",
     "guest": "Zach Zuckerman"
   },
   {
