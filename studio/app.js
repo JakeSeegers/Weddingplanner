@@ -12,8 +12,8 @@ const demoPlan = {
   // Guests, budget, vendors, tasks, and the rest start empty; fill them in
   // from each tab. The floor plan below matches maplayout.png and was
   // dialed in on the Seating tab's floor plan canvas.
-  couple: "Couple Name & Couple Name",
-  venue: "",
+  couple: "Alex & Jake",
+  venue: "Summerhouse",
   weddingDate: "2026-10-04",
   tables: [
     { id: uid(), name: "3", type: "round60", x: 629, y: 373, rot: 0, color: "#E5D5B7", runner: false, runnerColor: "#ffffff", seats: ["", "", "", "", "", "", "", ""] },

@@ -171,7 +171,7 @@
       '<select id="fpAddType">' + typeOptions + "</select>" +
       '<button id="fpAddBtn" class="ghost-button"><i data-lucide="plus"></i>Add shaped table</button>' +
       '<div class="fp-sep"></div>' +
-      '<div class="fp-zoom"><button id="fpZoomOut" class="ghost-button">−</button><span id="fpZoomLabel">100%</span><button id="fpZoomIn" class="ghost-button">+</button></div>';
+      '<div class="fp-zoom"><button id="fpZoomOut" class="ghost-button access-safe">−</button><span id="fpZoomLabel">100%</span><button id="fpZoomIn" class="ghost-button access-safe">+</button></div>';
 
     document.getElementById("fpAddBtn").addEventListener("click", function () {
       pushUndo();
