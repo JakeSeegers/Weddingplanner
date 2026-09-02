@@ -438,7 +438,8 @@
                 <button id="cloudPushBtn" class="ghost-button"><i data-lucide="cloud-upload"></i>Push</button>
                 <button id="cloudPullBtn" class="ghost-button"><i data-lucide="cloud-download"></i>Pull</button>
               </div>
-              <label class="sync-toggle"><input id="cloudAutoPush" type="checkbox" /> Auto-push local changes</label>
+              <label class="sync-toggle"><input id="cloudAutoPush" type="checkbox" /> Auto-push local changes (check this for two-way live sync)</label>
+              <p class="muted">With settings saved, this device automatically receives your partner's changes the instant they save. Check the box above so your own changes go out live too — otherwise you'll only push when you click "Push."</p>
               <div id="cloudSyncStatus" class="mini-list"></div>
             </section>
             <section class="panel"><h2>Backend launch plan</h2><div id="backendReadiness" class="mini-list"></div></section>
@@ -487,7 +488,9 @@
       </div>
     </dialog>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.113.0/dist/umd/supabase.js"></script>
     <script src="./floorplan.js"></script>
     <script src="./app.js"></script>
+    <script src="./realtime.js"></script>
   </body>
 </html>
