@@ -18,7 +18,7 @@
   "use strict";
 
   var STORAGE_KEY = "vowsuite-access-level";
-  var CODES = { "0425": "power", "1630": "helper" };
+  var CODES = { "0426": "power", "1630": "helper" };
 
   function currentLevel() {
     var level = localStorage.getItem(STORAGE_KEY);
