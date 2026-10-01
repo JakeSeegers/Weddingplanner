@@ -53,11 +53,19 @@
       return;
     }
     if (opts.silent && anySeatFilled()) return; // auto-run only ever touches a fully-empty seating chart
+    if (!opts.silent && anySeatFilled() && !window.confirm(
+      "This clears every table's current seating and rebuilds it to exactly match the saved seating chart. Continue?"
+    )) return;
+
+    pushUndo();
+    // Full resync, not just fill-the-gaps: clear every seat first so a
+    // corrected chart (e.g. a name moved to a different table) actually
+    // moves them, instead of leaving the old placement in place too.
+    plan.tables.forEach(function (t) { t.seats = t.seats.map(function () { return ""; }); });
 
     var tableByKey = new Map(plan.tables.map(function (t) { return [normalizeTableKey(t.name), t]; }));
     var seated = 0, grown = [], notFound = [];
 
-    pushUndo();
     preset.forEach(function (row) {
       var table = tableByKey.get(normalizeTableKey(row.table));
       var guestName = String(row.guest || "").trim();

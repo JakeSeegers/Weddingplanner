@@ -2496,31 +2496,31 @@ window.PRESET_SEATING = [
   },
   {
     "table": "1",
+    "guest": "Rosa González"
+  },
+  {
+    "table": "1",
+    "guest": "Laurent Loinard"
+  },
+  {
+    "table": "1",
+    "guest": "Vanessa Wood"
+  },
+  {
+    "table": "1",
     "guest": "George Gull"
-  },
-  {
-    "table": "1",
-    "guest": "Johanna Li"
-  },
-  {
-    "table": "1",
-    "guest": "Mr. Laurent Loinard"
-  },
-  {
-    "table": "1",
-    "guest": "Ms. Rosa Gonzalez Lopezlira"
   },
   {
     "table": "1",
     "guest": "Nancy Potter"
   },
   {
-    "table": "12",
-    "guest": "Arcadia Lee"
+    "table": "1",
+    "guest": "Johanna Li"
   },
   {
     "table": "12",
-    "guest": "Aurora Gonzalez"
+    "guest": "Aurora González"
   },
   {
     "table": "12",
@@ -2528,7 +2528,11 @@ window.PRESET_SEATING = [
   },
   {
     "table": "12",
-    "guest": "David Ristedt"
+    "guest": "Samuel Zuckerman"
+  },
+  {
+    "table": "12",
+    "guest": "Arcadia Lee"
   },
   {
     "table": "12",
@@ -2536,227 +2540,235 @@ window.PRESET_SEATING = [
   },
   {
     "table": "12",
-    "guest": "Kelly Ristedt"
-  },
-  {
-    "table": "12",
-    "guest": "Sam Zuckerman"
-  },
-  {
-    "table": "12",
-    "guest": "Zach Zuckerman"
+    "guest": "Zachary Zuckerman"
   },
   {
     "table": "3",
-    "guest": "Arguro Gil Jacome"
+    "guest": "Guillaume Loinard"
   },
   {
     "table": "3",
-    "guest": "Dany Stueland"
+    "guest": "Leilani Rivas Morón"
   },
   {
     "table": "3",
-    "guest": "Guillaume Loinard-Gonzalez"
+    "guest": "Lourdes Morón"
   },
   {
     "table": "3",
-    "guest": "Lei Rivas Moron"
+    "guest": "Carlos Rivas"
   },
   {
     "table": "3",
-    "guest": "Lupita Mier Silva"
+    "guest": "Melanie"
   },
   {
     "table": "3",
-    "guest": "Melanie Barnaba"
+    "guest": "Danny"
+  },
+  {
+    "table": "3",
+    "guest": "Lupita"
+  },
+  {
+    "table": "3",
+    "guest": "Arturo Gil"
   },
   {
     "table": "4",
-    "guest": "Brian Mastenbrook"
+    "guest": "Natalie Garnett"
   },
   {
     "table": "4",
-    "guest": "Dr. Michael Delage Jr."
+    "guest": "Erica Kanziger"
   },
   {
     "table": "4",
-    "guest": "Emily Wollan"
-  },
-  {
-    "table": "4",
-    "guest": "Mr. Paul Mikowski"
-  },
-  {
-    "table": "4",
-    "guest": "Mr. Silas Talley"
-  },
-  {
-    "table": "4",
-    "guest": "Mrs. Alex Mikowski"
-  },
-  {
-    "table": "4",
-    "guest": "Mrs. Jess Talley"
-  },
-  {
-    "table": "4",
-    "guest": "Timothy Vanhala"
-  },
-  {
-    "table": "5",
-    "guest": "Cory Tripathy"
-  },
-  {
-    "table": "5",
     "guest": "Dave Perczak"
   },
   {
-    "table": "5",
-    "guest": "Erica Kanzinger"
+    "table": "4",
+    "guest": "Susan Lin"
+  },
+  {
+    "table": "4",
+    "guest": "Jonah Wanagel"
   },
   {
     "table": "5",
-    "guest": "Tori Darnell"
-  },
-  {
-    "table": "6",
-    "guest": "Andrew Davis"
-  },
-  {
-    "table": "6",
     "guest": "Cameron Dunbar"
   },
   {
-    "table": "6",
+    "table": "5",
     "guest": "Chloe Frey"
   },
   {
-    "table": "6",
+    "table": "5",
     "guest": "Colby Chase"
   },
   {
-    "table": "6",
+    "table": "5",
     "guest": "Katherine Jones"
   },
   {
-    "table": "6",
+    "table": "5",
     "guest": "Rae Powers"
   },
   {
-    "table": "6",
+    "table": "5",
+    "guest": "Andrew Davis"
+  },
+  {
+    "table": "5",
     "guest": "Rashke Bradley"
   },
   {
-    "table": "7",
-    "guest": "Elias Diaz Escalona"
-  },
-  {
-    "table": "7",
-    "guest": "Gina (Patricia Eugenia) Lopezlira"
-  },
-  {
-    "table": "7",
-    "guest": "Kitty Lopezlira"
-  },
-  {
-    "table": "7",
-    "guest": "Lucy Gonz\u00e1lez Le\u00f3n"
-  },
-  {
-    "table": "7",
-    "guest": "Ms. Mar\u00eda Josefa Gonz\u00e1lez Marina"
-  },
-  {
-    "table": "7",
-    "guest": "Nuria Castells"
-  },
-  {
-    "table": "7",
-    "guest": "Ricardo Garc\u00eda Berumen Segura"
-  },
-  {
-    "table": "8",
-    "guest": "David Gilwan"
-  },
-  {
-    "table": "8",
-    "guest": "Geeta Rastogi"
-  },
-  {
-    "table": "8",
-    "guest": "Mohan Kolla"
-  },
-  {
-    "table": "8",
-    "guest": "Nishant Mishra"
-  },
-  {
-    "table": "8",
-    "guest": "Soha Kazmi"
-  },
-  {
-    "table": "8",
+    "table": "6",
     "guest": "Veronica Gilwan"
   },
   {
-    "table": "9",
+    "table": "6",
+    "guest": "David Gilwan"
+  },
+  {
+    "table": "6",
+    "guest": "Soha Kazmi"
+  },
+  {
+    "table": "6",
+    "guest": "Mohan Kolla"
+  },
+  {
+    "table": "6",
+    "guest": "Geetanjali Rastogi"
+  },
+  {
+    "table": "6",
+    "guest": "Nishant Mishra"
+  },
+  {
+    "table": "7",
+    "guest": "Elías Díaz Escalona"
+  },
+  {
+    "table": "7",
+    "guest": "Lucy González"
+  },
+  {
+    "table": "7",
+    "guest": "María Josefa González"
+  },
+  {
+    "table": "7",
+    "guest": "Ricardo García Berumen"
+  },
+  {
+    "table": "7",
+    "guest": "Enriqueta González"
+  },
+  {
+    "table": "7",
+    "guest": "Gina Lopezlira"
+  },
+  {
+    "table": "7",
+    "guest": "Eugenia Corvera"
+  },
+  {
+    "table": "8",
+    "guest": "Rachel Zhang"
+  },
+  {
+    "table": "8",
+    "guest": "Lexi Howard"
+  },
+  {
+    "table": "8",
+    "guest": "Madeleine Russel"
+  },
+  {
+    "table": "8",
     "guest": "Ben Laubach"
   },
   {
-    "table": "9",
+    "table": "8",
+    "guest": "Sam Lehn"
+  },
+  {
+    "table": "8",
     "guest": "Erin Nichols"
   },
   {
-    "table": "9",
+    "table": "8",
+    "guest": "Maisey Schuler"
+  },
+  {
+    "table": "8",
     "guest": "Kyle Franson"
   },
   {
     "table": "9",
-    "guest": "Lexi Howard"
-  },
-  {
-    "table": "9",
-    "guest": "Madeleine Russell"
-  },
-  {
-    "table": "9",
-    "guest": "Maisey Schuler"
-  },
-  {
-    "table": "9",
-    "guest": "Rachel Zhang"
-  },
-  {
-    "table": "9",
-    "guest": "Samuel Lehn"
-  },
-  {
-    "table": "10",
-    "guest": "Della Keahna Warrior"
-  },
-  {
-    "table": "10",
-    "guest": "Grant"
-  },
-  {
-    "table": "10",
-    "guest": "Jack Ramey"
-  },
-  {
-    "table": "10",
-    "guest": "Jonah"
-  },
-  {
-    "table": "10",
     "guest": "Philip Danziger"
   },
   {
-    "table": "10",
+    "table": "9",
+    "guest": "Francis Warrior"
+  },
+  {
+    "table": "9",
+    "guest": "Della Warrior"
+  },
+  {
+    "table": "9",
+    "guest": "Grant"
+  },
+  {
+    "table": "9",
+    "guest": "Jack Ramey"
+  },
+  {
+    "table": "9",
     "guest": "Shannon Firooz"
   },
   {
     "table": "10",
-    "guest": "Susan Lin"
+    "guest": "Silas Talley"
+  },
+  {
+    "table": "10",
+    "guest": "Jess Talley"
+  },
+  {
+    "table": "10",
+    "guest": "Brian Mastenbrook"
+  },
+  {
+    "table": "10",
+    "guest": "Tim Vanhala"
+  },
+  {
+    "table": "10",
+    "guest": "Emily Wollan"
+  },
+  {
+    "table": "10",
+    "guest": "Paul Mikowski"
+  },
+  {
+    "table": "10",
+    "guest": "Alex Mikowski"
+  },
+  {
+    "table": "10",
+    "guest": "Michael Delage"
+  },
+  {
+    "table": "11",
+    "guest": "Jeremiah Harmon"
+  },
+  {
+    "table": "11",
+    "guest": "Ela Pananon"
   },
   {
     "table": "11",
@@ -2772,10 +2784,10 @@ window.PRESET_SEATING = [
   },
   {
     "table": "11",
-    "guest": "Ela Pananon"
+    "guest": "Tommy Lawler"
   },
   {
     "table": "11",
-    "guest": "Jeremiah Harmon"
+    "guest": "Maya Kapur"
   }
 ];
